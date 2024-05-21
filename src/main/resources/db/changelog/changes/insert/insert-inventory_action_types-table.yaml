@@ -1,0 +1,34 @@
+databaseChangeLog:
+  - changeSet:
+      id: insert-inventory_action_types-table.yaml
+      author: IhorTrokhymchuk
+      changes:
+        - preConditions:
+            onFail: CONTINUE
+            sqlCheck:
+              expectedResult: 0
+              sql: SELECT COUNT(*) FROM inventory_action_types WHERE name = 'SHIPMENT'
+          insert:
+            tableName: inventory_action_types
+            columns:
+              - column:
+                  name: id
+                  valueNumeric: 1
+              - column:
+                  name: name
+                  value: 'SHIPMENT'
+
+        - preConditions:
+            onFail: CONTINUE
+            sqlCheck:
+              expectedResult: 0
+              sql: SELECT COUNT(*) FROM inventory_action_types WHERE name = 'REPLENISHMENT'
+          insert:
+            tableName: inventory_action_types
+            columns:
+              - column:
+                  name: id
+                  valueNumeric: 2
+              - column:
+                  name: name
+                  value: 'REPLENISHMENT'
