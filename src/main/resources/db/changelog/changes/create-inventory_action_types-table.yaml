@@ -1,0 +1,21 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-inventory_action_types-table
+      author: IhorTrokhymchuk
+      changes:
+        - createTable:
+            tableName: inventory_action_types
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: VARCHAR(55)
+                  constraints:
+                    nullable: false
+                    unique: true
