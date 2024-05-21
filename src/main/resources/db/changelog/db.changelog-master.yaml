@@ -11,3 +11,11 @@ databaseChangeLog:
       file: db/changelog/changes/insert/insert-inventory_action_types-table.yaml
   - include:
       file: db/changelog/changes/create-inventory_actions-table.yaml
+  - include:
+      file: db/changelog/changes/create-role_types-table.yml
+  - include:
+      file: db/changelog/changes/insert/insert-role-type-to-table.yml
+  - include:
+      file: db/changelog/changes/create-users-table.yaml
+  - include:
+      file: db/changelog/changes/insert/insert-two-user-to-table.yaml
