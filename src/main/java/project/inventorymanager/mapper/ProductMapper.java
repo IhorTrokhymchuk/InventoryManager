@@ -10,5 +10,5 @@ import project.inventorymanager.model.product.Product;
 public interface ProductMapper {
     ProductResponseDto toResponseDto(Product product);
 
-    Product toModel(ProductRequestDto requestDto);
+    Product toModelWithoutUser(ProductRequestDto requestDto);
 }

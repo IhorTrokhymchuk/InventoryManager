@@ -6,39 +6,43 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import project.inventorymanager.dto.warehouse.request.WarehouseRequestDto;
 import project.inventorymanager.dto.warehouse.response.WarehouseResponseDto;
-import project.inventorymanager.exception.repository.EntityNotFoundException;
 import project.inventorymanager.mapper.WarehouseMapper;
+import project.inventorymanager.model.user.User;
 import project.inventorymanager.model.warehouse.Warehouse;
-import project.inventorymanager.repository.WarehouseRepository;
+import project.inventorymanager.repositoryservice.UserRepoService;
+import project.inventorymanager.repositoryservice.WarehouseRepoService;
 import project.inventorymanager.service.WarehouseService;
 
 @Service
 @RequiredArgsConstructor
 public class WarehouseServiceImpl implements WarehouseService {
-    private final WarehouseRepository warehouseRepository;
+    private final UserRepoService userRepoService;
+    private final WarehouseRepoService warehouseRepoService;
     private final WarehouseMapper warehouseMapper;
 
     @Override
-    public WarehouseResponseDto save(WarehouseRequestDto requestDto) {
-        Warehouse warehouse = warehouseMapper.toModel(requestDto);
-        Warehouse savedWarehouse = warehouseRepository.save(warehouse);
-        return warehouseMapper.toResponseDto(savedWarehouse);
+    public WarehouseResponseDto save(WarehouseRequestDto requestDto, String email) {
+        Warehouse warehouse = warehouseMapper.toModelWithoutUser(requestDto);
+        User user = userRepoService.getByEmail(email);
+        warehouse.setUser(user);
+        return warehouseMapper.toResponseDto(warehouseRepoService.save(warehouse));
     }
 
     @Override
-    public WarehouseResponseDto getById(Long id) {
-        return warehouseMapper.toResponseDto(getWarehouseById(id));
+    public WarehouseResponseDto getById(Long id, String email) {
+        return warehouseMapper.toResponseDto(
+                warehouseRepoService.getByIdIfUserHavePermission(id, email));
     }
 
     @Override
-    public List<WarehouseResponseDto> findAll(Pageable pageable) {
-        return warehouseRepository.findAll(pageable).stream()
+    public List<WarehouseResponseDto> findAll(Pageable pageable, String email) {
+        return warehouseRepoService.findAllByUserEmail(pageable, email).stream()
                 .map(warehouseMapper::toResponseDto)
                 .toList();
     }
 
-    private Warehouse getWarehouseById(Long id) {
-        return warehouseRepository.findById(id).orElseThrow(
-                        () -> new EntityNotFoundException("Cant find warehouse with id: " + id));
+    @Override
+    public void deleteById(Long id, String email) {
+        warehouseRepoService.deleteByIdIfUserHavePermission(id, email);
     }
 }
