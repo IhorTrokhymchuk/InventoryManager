@@ -31,6 +31,9 @@ public class Warehouse {
     @Positive
     @Column(name = "capacity", nullable = false)
     private Long capacity;
+    @Positive
+    @Column(name = "free_capacity", nullable = false)
+    private Long freeCapacity;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;

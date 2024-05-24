@@ -10,5 +10,5 @@ import project.inventorymanager.model.warehouse.Warehouse;
 public interface WarehouseMapper {
     WarehouseResponseDto toResponseDto(Warehouse model);
 
-    Warehouse toModelWithoutUser(WarehouseRequestDto requestDto);
+    Warehouse toModelWithoutUserAndFreeCapacity(WarehouseRequestDto requestDto);
 }

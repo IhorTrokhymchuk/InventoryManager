@@ -22,9 +22,10 @@ public class WarehouseServiceImpl implements WarehouseService {
 
     @Override
     public WarehouseResponseDto save(WarehouseRequestDto requestDto, String email) {
-        Warehouse warehouse = warehouseMapper.toModelWithoutUser(requestDto);
+        Warehouse warehouse = warehouseMapper.toModelWithoutUserAndFreeCapacity(requestDto);
         User user = userRepoService.getByEmail(email);
         warehouse.setUser(user);
+        warehouse.setFreeCapacity(requestDto.getCapacity());
         return warehouseMapper.toResponseDto(warehouseRepoService.save(warehouse));
     }
 
