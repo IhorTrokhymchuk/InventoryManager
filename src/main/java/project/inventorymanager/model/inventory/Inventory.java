@@ -15,6 +15,7 @@ import lombok.Setter;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 import project.inventorymanager.model.product.Product;
+import project.inventorymanager.model.user.User;
 import project.inventorymanager.model.warehouse.Warehouse;
 
 @Entity
@@ -36,6 +37,9 @@ public class Inventory {
     @Positive
     @Column(nullable = false)
     private Long quantity;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
     @Column(name = "is_deleted",nullable = false)
     private boolean isDeleted = false;
 }
