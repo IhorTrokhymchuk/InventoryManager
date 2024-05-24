@@ -14,10 +14,12 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+import project.inventorymanager.exception.inventory.InventoryQuantityException;
 import project.inventorymanager.exception.repository.EntityAlreadyExistsException;
 import project.inventorymanager.exception.repository.EntityNotFoundException;
 import project.inventorymanager.exception.user.PasswordNotValidException;
 import project.inventorymanager.exception.user.UserDontHavePermissions;
+import project.inventorymanager.exception.warehouse.WarehouseDontHaveFreeCapacityException;
 
 @ControllerAdvice
 public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler {
@@ -75,6 +77,24 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
     public ResponseEntity<Object> handleCustomException(UserDontHavePermissions ex) {
         return getObjectResponseEntity(ex.getMessage(),
                 HttpStatusCode.valueOf(FORBIDDEN_STATUS_CODE));
+    }
+
+    @ExceptionHandler(WarehouseDontHaveFreeCapacityException.class)
+    public ResponseEntity<Object> handleCustomException(WarehouseDontHaveFreeCapacityException ex) {
+        return getObjectResponseEntity(ex.getMessage(),
+                HttpStatusCode.valueOf(CONFLICT_STATUS_CODE));
+    }
+
+    @ExceptionHandler(InventoryQuantityException.class)
+    public ResponseEntity<Object> handleCustomException(InventoryQuantityException ex) {
+        return getObjectResponseEntity(ex.getMessage(),
+                HttpStatusCode.valueOf(CONFLICT_STATUS_CODE));
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<Object> handleCustomException(IllegalArgumentException ex) {
+        return getObjectResponseEntity(ex.getMessage(),
+                HttpStatusCode.valueOf(CONFLICT_STATUS_CODE));
     }
 
     private ResponseEntity<Object> getObjectResponseEntity(String message,
