@@ -13,7 +13,7 @@ public interface InventoryRepoService {
 
     Page<Inventory> findAllByUserEmail(Pageable pageable, String email);
 
-    Optional<Inventory> findByIdAndUserEmail(Long id, String email);
+    Inventory getByIdAndUserEmail(Long id, String email);
 
     Optional<Inventory> findByProductIdAndWarehouseIdAndUserEmail(
             Long productId, Long warehouseId, String email);

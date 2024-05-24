@@ -7,16 +7,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import project.inventorymanager.dto.inventoryaction.request.InventoryActionRequestDto;
 import project.inventorymanager.dto.inventoryaction.response.InventoryActionResponseDto;
-import project.inventorymanager.exception.warehouse.WarehouseDontHaveFreeCapacityException;
 import project.inventorymanager.mapper.InventoryActionMapper;
 import project.inventorymanager.model.inventoryaction.InventoryAction;
 import project.inventorymanager.model.inventoryaction.InventoryActionType;
-import project.inventorymanager.model.warehouse.Warehouse;
 import project.inventorymanager.repositoryservice.InventoryActionRepoService;
 import project.inventorymanager.repositoryservice.InventoryActionTypeRepoService;
 import project.inventorymanager.service.InventoryActionService;
-import project.inventorymanager.service.strategy.InventoryActionStrategy;
-import project.inventorymanager.service.strategy.InventoryActionStrategyFactory;
+import project.inventorymanager.service.inventoryactionstrategy.InventoryActionStrategy;
+import project.inventorymanager.service.inventoryactionstrategy.InventoryActionStrategyFactory;
 
 @RequiredArgsConstructor
 @Service
@@ -26,7 +24,6 @@ public class InventoryActionServiceImpl implements InventoryActionService {
     private final InventoryActionRepoService inventoryActionRepoService;
     private final InventoryActionMapper inventoryActionMapper;
 
-    //todo: Logic for minus or plus inventory
     @Override
     @Transactional
     public InventoryActionResponseDto save(InventoryActionRequestDto requestDto, String email) {
@@ -49,14 +46,5 @@ public class InventoryActionServiceImpl implements InventoryActionService {
         return inventoryActionRepoService.findAllByUserEmail(pageable, email).stream()
                 .map(inventoryActionMapper::toResponseDto)
                 .toList();
-    }
-
-    private void isWarehouseIsFree(
-            Warehouse warehouse,
-            Long quantity) {
-        if (warehouse.getFreeCapacity() < quantity) {
-            throw new WarehouseDontHaveFreeCapacityException(
-                    "Warehouse with id: " + warehouse.getId() + " dont have free capacity");
-        }
     }
 }

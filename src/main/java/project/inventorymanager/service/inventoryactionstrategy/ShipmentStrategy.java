@@ -1,4 +1,4 @@
-package project.inventorymanager.service.strategy;
+package project.inventorymanager.service.inventoryactionstrategy;
 
 import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;

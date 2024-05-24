@@ -6,4 +6,6 @@ import project.inventorymanager.dto.inventory.response.InventoryResponseDto;
 
 public interface InventoryService {
     List<InventoryResponseDto> findAll(Pageable pageable, String email);
+
+    InventoryResponseDto getById(Long id, String email);
 }

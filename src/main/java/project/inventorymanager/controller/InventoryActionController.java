@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,17 +27,25 @@ public class InventoryActionController {
     @PostMapping
     @Operation(summary = "Create inventory action",
             description = "Save inventory action and update inventory")
-    public InventoryActionResponseDto save(@RequestBody @Valid InventoryActionRequestDto requestDto,
-                                           Authentication authentication) {
+    public InventoryActionResponseDto save(
+            @RequestBody @Valid InventoryActionRequestDto requestDto,
+            Authentication authentication) {
         return inventoryActionService.save(requestDto, authentication.getName());
     }
 
-    //todo: create normal description for swagger
     @GetMapping
     @Operation(summary = "Find all inventory action",
-            description = "Find all  action")
-    public List<InventoryActionResponseDto> findAll(Pageable pageable,
-                                                    Authentication authentication) {
+            description = "Find all users inventory actions history")
+    public List<InventoryActionResponseDto> findAll(
+            Pageable pageable, Authentication authentication) {
         return inventoryActionService.findAll(pageable, authentication.getName());
+    }
+
+    @GetMapping("/{id}")
+    @Operation(summary = "Get inventory action id",
+            description = "Get a available inventory action if user have permission")
+    public InventoryActionResponseDto getById(
+            @PathVariable Long id, Authentication authentication) {
+        return inventoryActionService.getById(id, authentication.getName());
     }
 }

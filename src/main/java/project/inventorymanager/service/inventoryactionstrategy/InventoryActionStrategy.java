@@ -1,4 +1,4 @@
-package project.inventorymanager.service.strategy;
+package project.inventorymanager.service.inventoryactionstrategy;
 
 import project.inventorymanager.dto.inventoryaction.request.InventoryActionRequestDto;
 import project.inventorymanager.model.inventoryaction.InventoryAction;

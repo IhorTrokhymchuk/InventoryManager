@@ -21,4 +21,9 @@ public class InventoryServiceImpl implements InventoryService {
                 .map(inventoryMapper::toResponseDto)
                 .toList();
     }
+
+    @Override
+    public InventoryResponseDto getById(Long id, String email) {
+        return inventoryMapper.toResponseDto(inventoryRepoService.getByIdAndUserEmail(id, email));
+    }
 }

@@ -36,8 +36,11 @@ public class InventoryRepoServiceImpl implements InventoryRepoService {
     }
 
     @Override
-    public Optional<Inventory> findByIdAndUserEmail(Long id, String email) {
-        return Optional.empty();
+    public Inventory getByIdAndUserEmail(Long id, String email) {
+        return inventoryRepository.findByIdAndUserEmail(id, email).orElseThrow(
+                () -> new EntityNotFoundException(
+                        "Cant find inventory with id: " + id
+                                + " user email: " + email));
     }
 
     @Override
