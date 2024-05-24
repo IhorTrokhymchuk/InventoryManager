@@ -21,9 +21,9 @@ public class InventoryActionType {
     private Long id;
     @Column(columnDefinition = "varchar", nullable = false, unique = true)
     @Enumerated(EnumType.STRING)
-    private InventoryActionName name;
+    private InventoryActionTypeName name;
 
-    public enum InventoryActionName {
+    public enum InventoryActionTypeName {
         SHIPMENT,
         REPLENISHMENT,
     }

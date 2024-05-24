@@ -9,12 +9,13 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.Positive;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 import project.inventorymanager.model.product.Product;
+import project.inventorymanager.model.user.User;
 import project.inventorymanager.model.warehouse.Warehouse;
 
 @Entity
@@ -33,9 +34,12 @@ public class Inventory {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "warehouse_id", nullable = false)
     private Warehouse warehouse;
-    @Min(value = 0)
+    @Positive
     @Column(nullable = false)
     private Long quantity;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
     @Column(name = "is_deleted",nullable = false)
     private boolean isDeleted = false;
 }

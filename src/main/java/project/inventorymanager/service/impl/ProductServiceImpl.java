@@ -7,53 +7,46 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import project.inventorymanager.dto.product.request.ProductRequestDto;
 import project.inventorymanager.dto.product.response.ProductResponseDto;
-import project.inventorymanager.exception.repository.EntityAlreadyExistsException;
-import project.inventorymanager.exception.repository.EntityNotFoundException;
 import project.inventorymanager.mapper.ProductMapper;
 import project.inventorymanager.model.product.Product;
-import project.inventorymanager.repository.ProductRepository;
+import project.inventorymanager.model.user.User;
+import project.inventorymanager.repositoryservice.ProductRepoService;
+import project.inventorymanager.repositoryservice.UserRepoService;
 import project.inventorymanager.service.ProductService;
 
 @Service
 @RequiredArgsConstructor
 public class ProductServiceImpl implements ProductService {
-    private final ProductRepository productRepository;
+    private final UserRepoService userRepoService;
+    private final ProductRepoService productRepoService;
     private final ProductMapper productMapper;
 
     @Override
-    public ProductResponseDto save(ProductRequestDto requestDto) {
-        ifProductWithUniqCodePresent(requestDto.getUniqCode());
-        Product product = productMapper.toModel(requestDto);
-        return productMapper.toResponseDto(productRepository.save(product));
-    }
-
-    private void ifProductWithUniqCodePresent(String uniqCode) {
-        if (productRepository.findProductByUniqCode(uniqCode).isPresent()) {
-            throw new EntityAlreadyExistsException("Cant create entity with uniqCode: " + uniqCode);
-        }
+    @Transactional
+    public ProductResponseDto save(ProductRequestDto requestDto, String email) {
+        productRepoService.isProductAlreadyExistWithUniqCode(requestDto.getUniqCode());
+        User user = userRepoService.getByEmail(email);
+        Product product = productMapper.toModelWithoutUser(requestDto);
+        product.setUser(user);
+        return productMapper.toResponseDto(productRepoService.save(product));
     }
 
     @Override
-    public ProductResponseDto getById(Long id) {
-        return productMapper.toResponseDto(getProductById(id));
-    }
-
-    private Product getProductById(Long id) {
-        return productRepository.findById(id).orElseThrow(
-                () -> new EntityNotFoundException("Cant find product with id:" + id));
+    public ProductResponseDto getById(Long id, String email) {
+        return productMapper.toResponseDto(
+                productRepoService.getByIdIfUserHavePermission(id, email));
     }
 
     @Override
-    public List<ProductResponseDto> findAll(Pageable pageable) {
-        return productRepository.findAll(pageable).stream()
+    public List<ProductResponseDto> findAll(Pageable pageable, String email) {
+        return productRepoService.findAllByUserEmail(pageable, email).stream()
                 .map(productMapper::toResponseDto)
                 .toList();
     }
 
     @Override
     @Transactional
-    public void deleteById(Long id) {
-        getById(id);
-        productRepository.deleteById(id);
+    public void deleteById(Long id, String email) {
+        productRepoService.deleteByIdIfUserHavePermission(id, email);
     }
 }

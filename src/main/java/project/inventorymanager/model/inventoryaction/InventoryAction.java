@@ -14,7 +14,9 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
-import project.inventorymanager.model.inventory.Inventory;
+import project.inventorymanager.model.product.Product;
+import project.inventorymanager.model.user.User;
+import project.inventorymanager.model.warehouse.Warehouse;
 
 @Entity
 @Getter
@@ -27,8 +29,11 @@ public class InventoryAction {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "inventory_id", nullable = false, unique = true)
-    private Inventory inventory;
+    @JoinColumn(name = "product_id", nullable = false)
+    private Product product;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "warehouse_id", nullable = false)
+    private Warehouse warehouse;
     @Column(nullable = false)
     private Long quantity;
     @ManyToOne(fetch = FetchType.LAZY)
@@ -36,6 +41,9 @@ public class InventoryAction {
     private InventoryActionType inventoryActionType;
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
     @Column(name = "is_deleted",nullable = false)
     private boolean isDeleted = false;
 }

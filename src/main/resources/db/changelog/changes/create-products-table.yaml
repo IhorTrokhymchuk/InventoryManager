@@ -35,9 +35,25 @@ databaseChangeLog:
                   constraints:
                     nullable: false
               - column:
+                  name: user_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
                   name: description
                   type: TEXT
               - column:
                   name: is_deleted
                   type: BOOLEAN
                   defaultValueBoolean: false
+
+  - changeSet:
+      id: add-foreign-keys-products-table
+      author: IhorTrokhymchuk
+      changes:
+        - addForeignKeyConstraint:
+            baseTableName: products
+            baseColumnNames: user_id
+            referencedTableName: users
+            referencedColumnNames: id
+            constraintName: fk_products_users
