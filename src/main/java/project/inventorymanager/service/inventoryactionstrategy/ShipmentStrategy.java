@@ -47,6 +47,7 @@ public class ShipmentStrategy implements InventoryActionStrategy {
         inventoryAction.setProduct(product);
         inventoryAction.setCreatedAt(LocalDateTime.now());
         setInventoryActionType(inventoryAction);
+        setPrices(inventoryAction, product);
         return inventoryActionRepoService.save(inventoryAction);
     }
 
@@ -81,5 +82,10 @@ public class ShipmentStrategy implements InventoryActionStrategy {
         InventoryActionType actionType = inventoryActionTypeRepoService
                 .getByTypeName(InventoryActionType.InventoryActionTypeName.SHIPMENT);
         inventoryAction.setInventoryActionType(actionType);
+    }
+
+    private void setPrices(InventoryAction inventoryAction, Product product) {
+        inventoryAction.setRetailPrice(product.getRetailPrice());
+        inventoryAction.setWholesalePrice(product.getWholesalePrice());
     }
 }

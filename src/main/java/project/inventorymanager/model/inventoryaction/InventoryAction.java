@@ -9,6 +9,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.Setter;
@@ -41,6 +42,10 @@ public class InventoryAction {
     private InventoryActionType inventoryActionType;
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
+    @Column(name = "wholesale_price", nullable = false)
+    private BigDecimal wholesalePrice;
+    @Column(name = "retail_price", nullable = false)
+    private BigDecimal retailPrice;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;

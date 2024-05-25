@@ -1,5 +1,7 @@
 package project.inventorymanager.repositoryservice.impl;
 
+import java.time.LocalDate;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -29,5 +31,17 @@ public class InventoryActionRepoServiceImpl implements InventoryActionRepoServic
     @Override
     public Page<InventoryAction> findAllByUserEmail(Pageable pageable, String email) {
         return inventoryActionRepository.findAllByUserEmail(pageable, email);
+    }
+
+    @Override
+    public List<InventoryAction> getAllByUserEmilAndDateTime(
+            String email, LocalDate localDate) {
+        List<InventoryAction> actions = inventoryActionRepository
+                .findAllByUserEmailAndCreatedAtDate(email, localDate);
+        if (actions.isEmpty()) {
+            throw new EntityNotFoundException("Cant find inventory actions by user email: " + email
+                            + " and date: " + localDate);
+        }
+        return actions;
     }
 }

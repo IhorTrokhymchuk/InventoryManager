@@ -29,6 +29,16 @@ databaseChangeLog:
                   constraints:
                     nullable: false
               - column:
+                  name: wholesale_price
+                  type: DECIMAL(10,2)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: retail_price
+                  type: DECIMAL(10,2)
+                  constraints:
+                    nullable: false
+              - column:
                   name: inventory_action_type_id
                   type: BIGINT
                   constraints:
