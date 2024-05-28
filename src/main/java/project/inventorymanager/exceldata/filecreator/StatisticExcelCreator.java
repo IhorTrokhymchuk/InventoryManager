@@ -12,7 +12,7 @@ import project.inventorymanager.dto.inventoryaction.excel.InventoryActionExcelDt
 import project.inventorymanager.exceldata.sheetcreator.InventoryActionSheetCreator;
 import project.inventorymanager.exceldata.sheetcreator.InventoryActionStatisticSheetCreator;
 import project.inventorymanager.exceldata.sheetcreator.ProductStatisticsSheetCreator;
-import project.inventorymanager.exception.excel.WorkWithExcelFileExceptions;
+import project.inventorymanager.exception.file.WorkWithFileExceptions;
 
 @Component
 @RequiredArgsConstructor
@@ -28,7 +28,7 @@ public class StatisticExcelCreator {
             productStatisticsSheetCreator.createSheet(workbook, dataSheet);
             writeToFile(workbook, filePath);
         } catch (IOException e) {
-            throw new WorkWithExcelFileExceptions(
+            throw new WorkWithFileExceptions(
                     "Error creating or writing to the Excel file: " + filePath
                             + " " + e.getMessage());
         }
