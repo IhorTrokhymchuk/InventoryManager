@@ -50,8 +50,8 @@ public class ReplenishmentStrategy implements InventoryActionStrategy {
         inventoryAction.setProduct(product);
         setInventoryActionType(inventoryAction);
         inventoryAction.setCreatedAt(LocalDateTime.now());
-        inventoryActionRepoService.save(inventoryAction);
-        return inventoryAction;
+        setPrices(inventoryAction, product);
+        return inventoryActionRepoService.save(inventoryAction);
     }
 
     private void setAndUpdateWarehouse(
@@ -93,5 +93,10 @@ public class ReplenishmentStrategy implements InventoryActionStrategy {
         InventoryActionType actionType = inventoryActionTypeRepoService
                 .getByTypeName(InventoryActionType.InventoryActionTypeName.REPLENISHMENT);
         inventoryAction.setInventoryActionType(actionType);
+    }
+
+    private void setPrices(InventoryAction inventoryAction, Product product) {
+        inventoryAction.setRetailPrice(product.getRetailPrice());
+        inventoryAction.setWholesalePrice(product.getWholesalePrice());
     }
 }

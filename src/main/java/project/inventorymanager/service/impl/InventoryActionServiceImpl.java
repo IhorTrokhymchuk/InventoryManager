@@ -36,12 +36,14 @@ public class InventoryActionServiceImpl implements InventoryActionService {
     }
 
     @Override
+    @Transactional
     public InventoryActionResponseDto getById(Long id, String email) {
         return inventoryActionMapper.toResponseDto(
                 inventoryActionRepoService.getByIdIfUserHavePermission(id, email));
     }
 
     @Override
+    @Transactional
     public List<InventoryActionResponseDto> findAll(Pageable pageable, String email) {
         return inventoryActionRepoService.findAllByUserEmail(pageable, email).stream()
                 .map(inventoryActionMapper::toResponseDto)

@@ -1,5 +1,6 @@
 package project.inventorymanager.dto.inventoryaction.response;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import lombok.Data;
 import project.inventorymanager.dto.inventoryactiontype.response.InventoryActionTypeResponseDto;
@@ -13,5 +14,7 @@ public class InventoryActionResponseDto {
     private WarehouseResponseDto warehouse;
     private Long quantity;
     private InventoryActionTypeResponseDto inventoryActionType;
+    private BigDecimal wholesalePrice;
+    private BigDecimal retailPrice;
     private LocalDateTime createdAt;
 }
