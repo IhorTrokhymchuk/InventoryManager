@@ -13,5 +13,6 @@ public interface InventoryActionRepoService {
 
     Page<InventoryAction> findAllByUserEmail(Pageable pageable, String email);
 
-    List<InventoryAction> getAllByUserEmilAndDateTime(String email, LocalDate localDate);
+    List<InventoryAction> getAllByUserEmilAndDateTime(
+            String email, LocalDate fromLocalDate, LocalDate toLocalDate);
 }

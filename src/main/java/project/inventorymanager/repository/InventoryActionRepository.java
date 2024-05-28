@@ -17,7 +17,10 @@ public interface InventoryActionRepository extends JpaRepository<InventoryAction
 
     @Query("SELECT ia FROM InventoryAction ia "
             + "WHERE ia.user.email = :userEmail "
-            + "AND DATE(ia.createdAt) = :date")
-    List<InventoryAction> findAllByUserEmailAndCreatedAtDate(
-            @Param("userEmail") String userEmail, @Param("date") LocalDate date);
+            + "AND DATE(ia.createdAt) >= :fromDate "
+            + "AND DATE(ia.createdAt) <= :toDate")
+    List<InventoryAction> findAllByUserEmailAndCreatedAtBetween(
+            @Param("userEmail") String userEmail,
+            @Param("fromDate") LocalDate fromDate,
+            @Param("toDate") LocalDate toDate);
 }

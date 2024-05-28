@@ -35,12 +35,12 @@ public class InventoryActionRepoServiceImpl implements InventoryActionRepoServic
 
     @Override
     public List<InventoryAction> getAllByUserEmilAndDateTime(
-            String email, LocalDate localDate) {
+            String email, LocalDate fromDate, LocalDate toDate) {
         List<InventoryAction> actions = inventoryActionRepository
-                .findAllByUserEmailAndCreatedAtDate(email, localDate);
+                .findAllByUserEmailAndCreatedAtBetween(email, fromDate, toDate);
         if (actions.isEmpty()) {
             throw new EntityNotFoundException("Cant find inventory actions by user email: " + email
-                            + " and date: " + localDate);
+                            + " and from date: " + fromDate + " to date: " + toDate);
         }
         return actions;
     }
