@@ -24,11 +24,6 @@ databaseChangeLog:
                   constraints:
                     nullable: false
               - column:
-                  name: user_id
-                  type: BIGINT
-                  constraints:
-                    nullable: false
-              - column:
                   name: quantity
                   type: BIGINT
                   constraints:
@@ -55,10 +50,3 @@ databaseChangeLog:
             referencedTableName: warehouses
             referencedColumnNames: id
             constraintName: fk_inventory_warehouse
-
-        - addForeignKeyConstraint:
-            baseTableName: inventories
-            baseColumnNames: user_id
-            referencedTableName: users
-            referencedColumnNames: id
-            constraintName: fk_inventories_users

@@ -16,7 +16,6 @@ import lombok.Setter;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 import project.inventorymanager.model.product.Product;
-import project.inventorymanager.model.user.User;
 import project.inventorymanager.model.warehouse.Warehouse;
 
 @Entity
@@ -46,9 +45,6 @@ public class InventoryAction {
     private BigDecimal wholesalePrice;
     @Column(name = "retail_price", nullable = false)
     private BigDecimal retailPrice;
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
     @Column(name = "is_deleted",nullable = false)
     private boolean isDeleted = false;
 }

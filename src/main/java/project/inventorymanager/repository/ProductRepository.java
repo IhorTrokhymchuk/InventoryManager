@@ -3,16 +3,26 @@ package project.inventorymanager.repository;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import project.inventorymanager.model.product.Product;
 
 public interface ProductRepository extends JpaRepository<Product, Long> {
-    //todo:fixed delete with uniqCode
-    Optional<Product> findProductByUniqCode(String uniqCode);
+    @EntityGraph(attributePaths = {"categories"})
+    Page<Product> findAll(Pageable pageable);
 
-    Optional<Product> findProductByIdAndUserEmail(Long id, String email);
+    @EntityGraph(attributePaths = {"categories"})
+    Optional<Product> findById(Long id);
 
-    Page<Product> findAllByUserEmail(Pageable pageable, String email);
+    boolean existsByUniqCode(String uniqCode);
 
-    Integer deleteByIdAndUserEmail(Long id, String email);
+    @Query(value = "SELECT COUNT(*) FROM products WHERE uniq_code = :uniqCode",
+            nativeQuery = true)
+    Long existsByUniqCodeIncludingDeleted(@Param("uniqCode") String uniqCode);
+
+    @Query(value = "SELECT * FROM products WHERE uniq_code = :uniqCode AND is_deleted = TRUE",
+            nativeQuery = true)
+    Product findDeletedByUniqCode(@Param("uniqCode") String uniqCode);
 }

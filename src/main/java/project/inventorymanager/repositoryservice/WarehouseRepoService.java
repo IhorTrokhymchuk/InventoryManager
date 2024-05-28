@@ -7,9 +7,9 @@ import project.inventorymanager.model.warehouse.Warehouse;
 public interface WarehouseRepoService {
     Warehouse save(Warehouse warehouse);
 
-    Warehouse getByIdIfUserHavePermission(Long id, String email);
+    Warehouse getById(Long id);
 
-    Page<Warehouse> findAllByUserEmail(Pageable pageable, String email);
+    Page<Warehouse> findAll(Pageable pageable);
 
-    void deleteByIdIfUserHavePermission(Long id, String email);
+    void deleteById(Long id);
 }

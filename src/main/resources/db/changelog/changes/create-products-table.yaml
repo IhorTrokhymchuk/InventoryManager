@@ -35,11 +35,6 @@ databaseChangeLog:
                   constraints:
                     nullable: false
               - column:
-                  name: user_id
-                  type: BIGINT
-                  constraints:
-                    nullable: false
-              - column:
                   name: description
                   type: TEXT
               - column:
@@ -48,12 +43,37 @@ databaseChangeLog:
                   defaultValueBoolean: false
 
   - changeSet:
-      id: add-foreign-keys-products-table
+      id: create-products_categories-table
+      author: IhorTrokhymchuk
+      changes:
+        - createTable:
+            tableName: products_categories
+            columns:
+              - column:
+                  name: product_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: category_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+
+  - changeSet:
+      id: add-foreign-keys-products_categories-table
       author: IhorTrokhymchuk
       changes:
         - addForeignKeyConstraint:
-            baseTableName: products
-            baseColumnNames: user_id
-            referencedTableName: users
+            baseTableName: products_categories
+            baseColumnNames: product_id
+            referencedTableName: products
             referencedColumnNames: id
-            constraintName: fk_products_users
+            constraintName: fk_products_categories_product
+
+        - addForeignKeyConstraint:
+            baseTableName: products_categories
+            baseColumnNames: category_id
+            referencedTableName: categories
+            referencedColumnNames: id
+            constraintName: fk_products_categories_categories

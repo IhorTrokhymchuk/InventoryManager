@@ -8,6 +8,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,33 +30,36 @@ public class ProductController {
     private final ProductService productService;
 
     @PostMapping
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
     @Operation(summary = "Create product",
             description = "Save product to database")
-    public ProductResponseDto save(@RequestBody @Valid ProductRequestDto requestDto,
-                                   Authentication authentication) {
-        return productService.save(requestDto, authentication.getName());
+    public ProductResponseDto save(@RequestBody @Valid ProductRequestDto requestDto) {
+        return productService.save(requestDto);
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAnyAuthority('USER')")
     @Operation(summary = "Get product by id",
             description = "Get existing user product by id")
     public ProductResponseDto getById(@NotNull @PathVariable Long id,
                                       Authentication authentication) {
-        return productService.getById(id, authentication.getName());
+        return productService.getById(id, authentication.getAuthorities());
     }
 
     @GetMapping
+    @PreAuthorize("hasAnyAuthority('USER')")
     @Operation(summary = "Get all products",
             description = "Get a page of all available user products")
     public List<ProductResponseDto> findAll(Pageable pageable, Authentication authentication) {
-        return productService.findAll(pageable, authentication.getName());
+        return productService.findAll(pageable, authentication.getAuthorities());
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Operation(summary = "Delete product by id",
             description = "Delete existing user product by id")
-    public void deleteById(@NotNull @PathVariable Long id, Authentication authentication) {
-        productService.deleteById(id, authentication.getName());
+    public void deleteById(@NotNull @PathVariable Long id) {
+        productService.deleteById(id);
     }
 }

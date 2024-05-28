@@ -91,6 +91,21 @@ databaseChangeLog:
             onFail: MARK_RAN
             sqlCheck:
               expectedResult: 0
+              sql: SELECT COUNT(*) FROM users_role_types WHERE user_id = 1 AND role_type_id = 3
+          insert:
+            tableName: users_role_types
+            columns:
+              - column:
+                  name: user_id
+                  valueNumeric: 1
+              - column:
+                  name: role_type_id
+                  valueNumeric: 3
+
+        - preConditions:
+            onFail: MARK_RAN
+            sqlCheck:
+              expectedResult: 0
               sql: SELECT COUNT(*) FROM users_role_types WHERE user_id = 2 AND role_type_id = 1
           insert:
             tableName: users_role_types
@@ -101,3 +116,18 @@ databaseChangeLog:
               - column:
                   name: role_type_id
                   valueNumeric: 1
+
+        - preConditions:
+            onFail: MARK_RAN
+            sqlCheck:
+              expectedResult: 0
+              sql: SELECT COUNT(*) FROM users_role_types WHERE user_id = 2 AND role_type_id = 2
+          insert:
+            tableName: users_role_types
+            columns:
+              - column:
+                  name: user_id
+                  valueNumeric: 2
+              - column:
+                  name: role_type_id
+                  valueNumeric: 2

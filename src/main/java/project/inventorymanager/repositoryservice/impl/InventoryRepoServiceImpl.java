@@ -21,33 +21,27 @@ public class InventoryRepoServiceImpl implements InventoryRepoService {
     }
 
     @Override
-    public Inventory getByProductIdAndWarehouseIdAndUserEmail(
-            Long productId, Long warehouseId, String email) {
-        return inventoryRepository.findByProductIdAndWarehouseIdAndUserEmail(
-                productId, warehouseId, email).orElseThrow(() -> new EntityNotFoundException(
-                "Cant find product with id: " + productId
-                        + " on warehouse with id: " + warehouseId
-                        + " and user email: " + email));
+    public Inventory getByProductIdAndWarehouseId(Long productId, Long warehouseId) {
+        return inventoryRepository.findByProductIdAndWarehouseId(productId, warehouseId)
+                .orElseThrow(() -> new EntityNotFoundException(
+                        "Cant find product with id: " + productId
+                                + " on warehouse with id: " + warehouseId));
     }
 
     @Override
-    public Page<Inventory> findAllByUserEmail(Pageable pageable, String email) {
-        return inventoryRepository.findAllByProductUserEmail(pageable, email);
+    public Page<Inventory> findAll(Pageable pageable) {
+        return inventoryRepository.findAll(pageable);
     }
 
     @Override
-    public Inventory getByIdAndUserEmail(Long id, String email) {
-        return inventoryRepository.findByIdAndUserEmail(id, email).orElseThrow(
+    public Inventory getById(Long id) {
+        return inventoryRepository.findById(id).orElseThrow(
                 () -> new EntityNotFoundException(
-                        "Cant find inventory with id: " + id
-                                + " user email: " + email));
+                        "Cant find inventory with id: " + id));
     }
 
     @Override
-    public Optional<Inventory> findByProductIdAndWarehouseIdAndUserEmail(
-            Long productId, Long warehouseId, String email) {
-        return inventoryRepository.findByProductIdAndWarehouseIdAndUserEmail(
-                productId, warehouseId, email);
+    public Optional<Inventory> findByProductIdAndWarehouseId(Long productId, Long warehouseId) {
+        return inventoryRepository.findByProductIdAndWarehouseId(productId, warehouseId);
     }
-
 }

@@ -1,6 +1,6 @@
 package project.inventorymanager.repositoryservice.impl;
 
-import java.util.Optional;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -17,34 +17,44 @@ public class ProductRepoServiceImpl implements ProductRepoService {
     private final ProductRepository productRepository;
 
     @Override
-    public Product getByIdIfUserHavePermission(Long id, String email) {
-        return productRepository.findProductByIdAndUserEmail(id, email).orElseThrow(
+    public Product getById(Long id) {
+        return productRepository.findById(id).orElseThrow(
                 () -> new EntityNotFoundException(
-                        "Cant find product with user email: " + email + " and id: " + id));
+                        "Cant find product with id: " + id));
     }
 
     @Override
-    //todo:fixed delete with uniqCode
-    public void isProductAlreadyExistWithUniqCode(String uniqCode) {
-        Optional<Product> optionalProduct = productRepository.findProductByUniqCode(uniqCode);
-        if (optionalProduct.isPresent()) {
-            throw new EntityAlreadyExistsException(
-                    "Product with uniqCode: " + uniqCode + " is already exist");
+    public Product getDeletedByUniqCode(String uniqCode) {
+        return productRepository.findDeletedByUniqCode(uniqCode);
+    }
+
+    @Override
+    public boolean ifExistDeletedWithUniqCode(String uniqCode) {
+        Long exists = productRepository.existsByUniqCodeIncludingDeleted(uniqCode);
+        return exists > 0;
+    }
+
+    @Override
+    public Page<Product> findAll(Pageable pageable) {
+        return productRepository.findAll(pageable);
+    }
+
+    @Override
+    public void isExistWithUniqCode(String uniqCode) {
+        if (productRepository.existsByUniqCode(uniqCode)) {
+            throw new EntityAlreadyExistsException("Product with uniq code '"
+                    + uniqCode + "' already exist");
         }
     }
 
     @Override
-    public Page<Product> findAllByUserEmail(Pageable pageable, String email) {
-        return productRepository.findAllByUserEmail(pageable, email);
-    }
-
-    @Override
-    public void deleteByIdIfUserHavePermission(Long id, String email) {
-        Integer result = productRepository.deleteByIdAndUserEmail(id, email);
-        if (result == 0) {
-            throw new EntityNotFoundException(
-                    "Cant delete product with user email: " + email + " adn id: " + id);
+    @Transactional
+    public void deleteById(Long id) {
+        if (productRepository.existsById(id)) {
+            productRepository.deleteById(id);
         }
+        throw new EntityNotFoundException("Cant find product with id: " + id);
+
     }
 
     @Override

@@ -16,14 +16,14 @@ public class InventoryServiceImpl implements InventoryService {
     private final InventoryMapper inventoryMapper;
 
     @Override
-    public List<InventoryResponseDto> findAll(Pageable pageable, String email) {
-        return inventoryRepoService.findAllByUserEmail(pageable, email).stream()
+    public List<InventoryResponseDto> findAll(Pageable pageable) {
+        return inventoryRepoService.findAll(pageable).stream()
                 .map(inventoryMapper::toResponseDto)
                 .toList();
     }
 
     @Override
-    public InventoryResponseDto getById(Long id, String email) {
-        return inventoryMapper.toResponseDto(inventoryRepoService.getByIdAndUserEmail(id, email));
+    public InventoryResponseDto getById(Long id) {
+        return inventoryMapper.toResponseDto(inventoryRepoService.getById(id));
     }
 }

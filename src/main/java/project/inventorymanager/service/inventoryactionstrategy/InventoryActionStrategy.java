@@ -7,5 +7,5 @@ import project.inventorymanager.model.inventoryaction.InventoryActionType;
 public interface InventoryActionStrategy {
     InventoryActionType.InventoryActionTypeName getType();
 
-    InventoryAction doAction(InventoryActionRequestDto requestDto, String email);
+    InventoryAction doAction(InventoryActionRequestDto requestDto);
 }

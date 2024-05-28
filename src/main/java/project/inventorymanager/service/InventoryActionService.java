@@ -6,9 +6,9 @@ import project.inventorymanager.dto.inventoryaction.request.InventoryActionReque
 import project.inventorymanager.dto.inventoryaction.response.InventoryActionResponseDto;
 
 public interface InventoryActionService {
-    InventoryActionResponseDto save(InventoryActionRequestDto requestDto, String email);
+    InventoryActionResponseDto save(InventoryActionRequestDto requestDto);
 
-    InventoryActionResponseDto getById(Long id, String email);
+    InventoryActionResponseDto getById(Long id);
 
-    List<InventoryActionResponseDto> findAll(Pageable pageable, String email);
+    List<InventoryActionResponseDto> findAll(Pageable pageable);
 }

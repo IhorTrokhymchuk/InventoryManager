@@ -9,10 +9,9 @@ import project.inventorymanager.model.inventoryaction.InventoryAction;
 public interface InventoryActionRepoService {
     InventoryAction save(InventoryAction inventoryAction);
 
-    InventoryAction getByIdIfUserHavePermission(Long id, String email);
+    InventoryAction getById(Long id);
 
-    Page<InventoryAction> findAllByUserEmail(Pageable pageable, String email);
+    Page<InventoryAction> findAll(Pageable pageable);
 
-    List<InventoryAction> getAllByUserEmilAndDateTime(
-            String email, LocalDate fromLocalDate, LocalDate toLocalDate);
+    List<InventoryAction> getAllByDates(LocalDate fromLocalDate, LocalDate toLocalDate);
 }

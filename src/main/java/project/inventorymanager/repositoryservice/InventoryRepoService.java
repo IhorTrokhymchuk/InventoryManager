@@ -8,14 +8,12 @@ import project.inventorymanager.model.inventory.Inventory;
 public interface InventoryRepoService {
     Inventory save(Inventory inventory);
 
-    Inventory getByProductIdAndWarehouseIdAndUserEmail(
-            Long productId, Long warehouseId, String email);
+    Inventory getByProductIdAndWarehouseId(Long productId, Long warehouseId);
 
-    Page<Inventory> findAllByUserEmail(Pageable pageable, String email);
+    Page<Inventory> findAll(Pageable pageable);
 
-    Inventory getByIdAndUserEmail(Long id, String email);
+    Inventory getById(Long id);
 
-    Optional<Inventory> findByProductIdAndWarehouseIdAndUserEmail(
-            Long productId, Long warehouseId, String email);
+    Optional<Inventory> findByProductIdAndWarehouseId(Long productId, Long warehouseId);
 
 }

@@ -8,7 +8,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.Authentication;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,35 +28,36 @@ import project.inventorymanager.service.WarehouseService;
 public class WarehouseController {
     private final WarehouseService warehouseService;
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @Operation(summary = "Create warehouse",
             description = "Save warehouse to database")
     @PostMapping
-    public WarehouseResponseDto save(@RequestBody @Valid WarehouseRequestDto requestDto,
-                                     Authentication authentication) {
-        return warehouseService.save(requestDto, authentication.getName());
+    public WarehouseResponseDto save(@RequestBody @Valid WarehouseRequestDto requestDto) {
+        return warehouseService.save(requestDto);
     }
 
+    @PreAuthorize("hasAuthority('EMPLOYEE')")
     @Operation(summary = "Get warehouses by id",
             description = "Get warehouses by id or throw exception")
     @GetMapping("/{id}")
-    public WarehouseResponseDto getById(@PathVariable @NotNull Long id,
-                                        Authentication authentication) {
-        return warehouseService.getById(id, authentication.getName());
+    public WarehouseResponseDto getById(@PathVariable @NotNull Long id) {
+        return warehouseService.getById(id);
     }
 
+    @PreAuthorize("hasAuthority('EMPLOYEE')")
     @Operation(summary = "Get all warehouses",
             description = "Get a list of all available warehouses")
     @GetMapping
-    public List<WarehouseResponseDto> findAll(Pageable pageable, Authentication authentication) {
-        return warehouseService.findAll(pageable, authentication.getName());
+    public List<WarehouseResponseDto> findAll(Pageable pageable) {
+        return warehouseService.findAll(pageable);
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Operation(summary = "Delete product by id",
             description = "Delete existing user product by id")
-    public void deleteById(@NotNull @PathVariable Long id,
-                           Authentication authentication) {
-        warehouseService.deleteById(id, authentication.getName());
+    public void deleteById(@NotNull @PathVariable Long id) {
+        warehouseService.deleteById(id);
     }
 }

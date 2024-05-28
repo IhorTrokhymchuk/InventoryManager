@@ -5,7 +5,7 @@ import org.springframework.data.domain.Pageable;
 import project.inventorymanager.dto.inventory.response.InventoryResponseDto;
 
 public interface InventoryService {
-    List<InventoryResponseDto> findAll(Pageable pageable, String email);
+    List<InventoryResponseDto> findAll(Pageable pageable);
 
-    InventoryResponseDto getById(Long id, String email);
+    InventoryResponseDto getById(Long id);
 }

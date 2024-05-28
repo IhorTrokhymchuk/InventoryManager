@@ -35,6 +35,7 @@ public class RoleType implements GrantedAuthority {
     public enum RoleName {
         // Roles should be listed in ascending order of priority
         USER,
+        EMPLOYEE,
         ADMIN;
 
         public static List<RoleName> getRolesUpTo(RoleName highestRole) {

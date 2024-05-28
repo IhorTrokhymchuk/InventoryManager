@@ -10,6 +10,8 @@ databaseChangeLog:
   - include:
       file: db/changelog/changes/create-warehouses-table.yaml
   - include:
+      file: db/changelog/changes/create-categories-table.yml
+  - include:
       file: db/changelog/changes/create-products-table.yaml
   - include:
       file: db/changelog/changes/create-inventories-table.yaml

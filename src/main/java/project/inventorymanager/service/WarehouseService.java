@@ -6,11 +6,11 @@ import project.inventorymanager.dto.warehouse.request.WarehouseRequestDto;
 import project.inventorymanager.dto.warehouse.response.WarehouseResponseDto;
 
 public interface WarehouseService {
-    WarehouseResponseDto save(WarehouseRequestDto requestDto, String email);
+    WarehouseResponseDto save(WarehouseRequestDto requestDto);
 
-    WarehouseResponseDto getById(Long id, String email);
+    WarehouseResponseDto getById(Long id);
 
-    List<WarehouseResponseDto> findAll(Pageable pageable, String email);
+    List<WarehouseResponseDto> findAll(Pageable pageable);
 
-    void deleteById(Long id, String email);
+    void deleteById(Long id);
 }
