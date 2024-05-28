@@ -5,14 +5,17 @@ import org.springframework.data.domain.Pageable;
 import project.inventorymanager.model.product.Product;
 
 public interface ProductRepoService {
-    Product getByIdIfUserHavePermission(Long id, String email);
-
-    Page<Product> findAllByUserEmail(Pageable pageable, String email);
-
-    //todo:
-    void isProductAlreadyExistWithUniqCode(String uniqCode);
-
-    void deleteByIdIfUserHavePermission(Long id, String email);
-
     Product save(Product product);
+
+    Product getById(Long id);
+
+    Page<Product> findAll(Pageable pageable);
+
+    void isExistWithUniqCode(String uniqCode);
+
+    boolean ifExistDeletedWithUniqCode(String uniqCode);
+
+    Product getDeletedByUniqCode(String uniqCode);
+
+    void deleteById(Long id);
 }

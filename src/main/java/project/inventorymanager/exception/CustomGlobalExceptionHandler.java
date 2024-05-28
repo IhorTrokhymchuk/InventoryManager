@@ -1,5 +1,6 @@
 package project.inventorymanager.exception;
 
+import io.jsonwebtoken.ExpiredJwtException;
 import java.time.LocalDateTime;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -65,6 +66,12 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
     public ResponseEntity<Object> handleCustomException(EntityAlreadyExistsException ex) {
         return getObjectResponseEntity(ex.getMessage(),
                 HttpStatusCode.valueOf(CONFLICT_STATUS_CODE));
+    }
+
+    @ExceptionHandler(ExpiredJwtException.class)
+    public ResponseEntity<Object> handleCustomException(ExpiredJwtException ex) {
+        return getObjectResponseEntity(ex.getMessage(),
+                HttpStatusCode.valueOf(UNAUTHORIZED_STATUS_CODE));
     }
 
     @ExceptionHandler(PasswordNotValidException.class)

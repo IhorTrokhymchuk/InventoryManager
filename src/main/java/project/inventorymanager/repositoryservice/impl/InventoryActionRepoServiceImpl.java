@@ -22,25 +22,24 @@ public class InventoryActionRepoServiceImpl implements InventoryActionRepoServic
     }
 
     @Override
-    public InventoryAction getByIdIfUserHavePermission(Long id, String email) {
-        return inventoryActionRepository.findByIdAndUserEmail(id, email).orElseThrow(
+    public InventoryAction getById(Long id) {
+        return inventoryActionRepository.findById(id).orElseThrow(
                 () -> new EntityNotFoundException(
-                        "Cant find inventory action with user email: " + email + " and id: " + id));
+                        "Cant find inventory action with id: " + id));
     }
 
     @Override
-    public Page<InventoryAction> findAllByUserEmail(Pageable pageable, String email) {
-        return inventoryActionRepository.findAllByUserEmail(pageable, email);
+    public Page<InventoryAction> findAll(Pageable pageable) {
+        return inventoryActionRepository.findAll(pageable);
     }
 
     @Override
-    public List<InventoryAction> getAllByUserEmilAndDateTime(
-            String email, LocalDate fromDate, LocalDate toDate) {
-        List<InventoryAction> actions = inventoryActionRepository
-                .findAllByUserEmailAndCreatedAtBetween(email, fromDate, toDate);
+    public List<InventoryAction> getAllByDates(
+            LocalDate fromDate, LocalDate toDate) {
+        List<InventoryAction> actions = inventoryActionRepository.findAllByDates(fromDate, toDate);
         if (actions.isEmpty()) {
-            throw new EntityNotFoundException("Cant find inventory actions by user email: " + email
-                            + " and from date: " + fromDate + " to date: " + toDate);
+            throw new EntityNotFoundException("Cant find inventory actions by from date: "
+                    + fromDate + " to date: " + toDate);
         }
         return actions;
     }

@@ -22,13 +22,28 @@ databaseChangeLog:
             onFail: CONTINUE
             sqlCheck:
               expectedResult: 0
-              sql: SELECT COUNT(*) FROM role_types WHERE name = 'ADMIN'
+              sql: SELECT COUNT(*) FROM role_types WHERE name = 'EMPLOYEE'
           insert:
             tableName: role_types
             columns:
               - column:
                   name: id
                   valueNumeric: 2
+              - column:
+                  name: name
+                  value: 'EMPLOYEE'
+
+        - preConditions:
+            onFail: CONTINUE
+            sqlCheck:
+              expectedResult: 0
+              sql: SELECT COUNT(*) FROM role_types WHERE name = 'ADMIN'
+          insert:
+            tableName: role_types
+            columns:
+              - column:
+                  name: id
+                  valueNumeric: 3
               - column:
                   name: name
                   value: 'ADMIN'

@@ -8,11 +8,12 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import project.inventorymanager.model.inventory.Inventory;
 
 public interface InventoryRepository extends JpaRepository<Inventory, Long> {
-    @EntityGraph(attributePaths = {"product", "warehouse"})
-    Page<Inventory> findAllByProductUserEmail(Pageable pageable, String email);
 
-    Optional<Inventory> findByIdAndUserEmail(Long id, String email);
+    @EntityGraph(attributePaths = {"product", "product.categories", "warehouse"})
+    Page<Inventory> findAll(Pageable pageable);
 
-    Optional<Inventory> findByProductIdAndWarehouseIdAndUserEmail(
-            Long productId, Long warehouseId, String email);
+    @EntityGraph(attributePaths = {"product", "product.categories", "warehouse"})
+    Optional<Inventory> findById(Long id);
+
+    Optional<Inventory> findByProductIdAndWarehouseId(Long productId, Long warehouseId);
 }

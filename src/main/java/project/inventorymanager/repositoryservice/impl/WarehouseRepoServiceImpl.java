@@ -20,24 +20,24 @@ public class WarehouseRepoServiceImpl implements WarehouseRepoService {
     }
 
     @Override
-    public Warehouse getByIdIfUserHavePermission(Long id, String email) {
-        return warehouseRepository.findProductByIdAndUserEmail(id, email).orElseThrow(
-                () -> new EntityNotFoundException("Cant find warehouse with user email: " + email
-                        + " and id: " + id)
+    public Warehouse getById(Long id) {
+        return warehouseRepository.findById(id).orElseThrow(
+                () -> new EntityNotFoundException("Cant find warehouse with id: " + id)
         );
     }
 
     @Override
-    public Page<Warehouse> findAllByUserEmail(Pageable pageable, String email) {
-        return warehouseRepository.findAllByUserEmail(pageable, email);
+    public Page<Warehouse> findAll(Pageable pageable) {
+        return warehouseRepository.findAll(pageable);
     }
 
     @Override
-    public void deleteByIdIfUserHavePermission(Long id, String email) {
-        Integer result = warehouseRepository.deleteByIdAndUserEmail(id, email);
-        if (result == 0) {
-            throw new EntityNotFoundException(
-                    "Cant delete warehouse with user email: " + email + " and id: " + id);
+    public void deleteById(Long id) {
+        boolean existsById = warehouseRepository.existsById(id);
+        if (existsById) {
+            warehouseRepository.deleteById(id);
+        } else {
+            throw new EntityNotFoundException("Cant find warehouse with id: " + id);
         }
     }
 }

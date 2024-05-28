@@ -1,5 +1,6 @@
 package project.inventorymanager.service.inventoryactionstrategy;
 
+import jakarta.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -11,20 +12,17 @@ import project.inventorymanager.model.inventory.Inventory;
 import project.inventorymanager.model.inventoryaction.InventoryAction;
 import project.inventorymanager.model.inventoryaction.InventoryActionType;
 import project.inventorymanager.model.product.Product;
-import project.inventorymanager.model.user.User;
 import project.inventorymanager.model.warehouse.Warehouse;
 import project.inventorymanager.repositoryservice.InventoryActionRepoService;
 import project.inventorymanager.repositoryservice.InventoryActionTypeRepoService;
 import project.inventorymanager.repositoryservice.InventoryRepoService;
 import project.inventorymanager.repositoryservice.ProductRepoService;
-import project.inventorymanager.repositoryservice.UserRepoService;
 import project.inventorymanager.repositoryservice.WarehouseRepoService;
 
 @Component
 @RequiredArgsConstructor
 public class ReplenishmentStrategy implements InventoryActionStrategy {
     private final InventoryActionTypeRepoService inventoryActionTypeRepoService;
-    private final UserRepoService userRepoService;
     private final ProductRepoService productRepoService;
     private final WarehouseRepoService warehouseRepoService;
     private final InventoryActionRepoService inventoryActionRepoService;
@@ -37,16 +35,14 @@ public class ReplenishmentStrategy implements InventoryActionStrategy {
     }
 
     @Override
-    public InventoryAction doAction(InventoryActionRequestDto requestDto, String email) {
+    @Transactional
+    public InventoryAction doAction(InventoryActionRequestDto requestDto) {
         InventoryAction inventoryAction = inventoryActionMapper.toModelWithQuantity(requestDto);
         Product product = productRepoService
-                .getByIdIfUserHavePermission(requestDto.getProductId(), email);
-        User user = userRepoService.getByEmail(email);
-        Warehouse warehouse = warehouseRepoService
-                .getByIdIfUserHavePermission(requestDto.getWarehouseId(), email);
+                .getById(requestDto.getProductId());
+        Warehouse warehouse = warehouseRepoService.getById(requestDto.getWarehouseId());
         setAndUpdateWarehouse(inventoryAction, warehouse, requestDto);
-        updateOrCreateInventory(product, warehouse, user, requestDto.getQuantity());
-        inventoryAction.setUser(user);
+        updateOrCreateInventory(product, warehouse, requestDto.getQuantity());
         inventoryAction.setProduct(product);
         setInventoryActionType(inventoryAction);
         inventoryAction.setCreatedAt(LocalDateTime.now());
@@ -71,10 +67,10 @@ public class ReplenishmentStrategy implements InventoryActionStrategy {
     }
 
     private void updateOrCreateInventory(
-            Product product, Warehouse warehouse, User user, Long quantity) {
+            Product product, Warehouse warehouse, Long quantity) {
         Optional<Inventory> optionalInventory
-                = inventoryRepoService.findByProductIdAndWarehouseIdAndUserEmail(
-                        product.getId(), warehouse.getId(), user.getEmail());
+                = inventoryRepoService.findByProductIdAndWarehouseId(
+                        product.getId(), warehouse.getId());
         Inventory inventory;
         if (optionalInventory.isPresent()) {
             inventory = optionalInventory.get();
@@ -83,7 +79,6 @@ public class ReplenishmentStrategy implements InventoryActionStrategy {
             inventory = new Inventory();
             inventory.setProduct(product);
             inventory.setWarehouse(warehouse);
-            inventory.setUser(user);
             inventory.setQuantity(quantity);
         }
         inventoryRepoService.save(inventory);

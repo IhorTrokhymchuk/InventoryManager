@@ -10,20 +10,17 @@ import project.inventorymanager.model.inventory.Inventory;
 import project.inventorymanager.model.inventoryaction.InventoryAction;
 import project.inventorymanager.model.inventoryaction.InventoryActionType;
 import project.inventorymanager.model.product.Product;
-import project.inventorymanager.model.user.User;
 import project.inventorymanager.model.warehouse.Warehouse;
 import project.inventorymanager.repositoryservice.InventoryActionRepoService;
 import project.inventorymanager.repositoryservice.InventoryActionTypeRepoService;
 import project.inventorymanager.repositoryservice.InventoryRepoService;
 import project.inventorymanager.repositoryservice.ProductRepoService;
-import project.inventorymanager.repositoryservice.UserRepoService;
 import project.inventorymanager.repositoryservice.WarehouseRepoService;
 
 @Component
 @RequiredArgsConstructor
 public class ShipmentStrategy implements InventoryActionStrategy {
     private final InventoryActionTypeRepoService inventoryActionTypeRepoService;
-    private final UserRepoService userRepoService;
     private final ProductRepoService productRepoService;
     private final WarehouseRepoService warehouseRepoService;
     private final InventoryActionRepoService inventoryActionRepoService;
@@ -36,14 +33,12 @@ public class ShipmentStrategy implements InventoryActionStrategy {
     }
 
     @Override
-    public InventoryAction doAction(InventoryActionRequestDto requestDto, String email) {
+    public InventoryAction doAction(InventoryActionRequestDto requestDto) {
         InventoryAction inventoryAction = inventoryActionMapper.toModelWithQuantity(requestDto);
-        checkAndUpdateInventory(requestDto, email);
-        setAndUpdateWarehouse(inventoryAction, requestDto, email);
-        User user = userRepoService.getByEmail(email);
-        inventoryAction.setUser(user);
-        Product product = productRepoService.getByIdIfUserHavePermission(
-                requestDto.getProductId(), email);
+        checkAndUpdateInventory(requestDto);
+        setAndUpdateWarehouse(inventoryAction, requestDto);
+        Product product = productRepoService.getById(
+                requestDto.getProductId());
         inventoryAction.setProduct(product);
         inventoryAction.setCreatedAt(LocalDateTime.now());
         setInventoryActionType(inventoryAction);
@@ -51,9 +46,9 @@ public class ShipmentStrategy implements InventoryActionStrategy {
         return inventoryActionRepoService.save(inventoryAction);
     }
 
-    private void checkAndUpdateInventory(InventoryActionRequestDto requestDto, String email) {
-        Inventory inventory = inventoryRepoService.getByProductIdAndWarehouseIdAndUserEmail(
-                requestDto.getProductId(), requestDto.getWarehouseId(), email);
+    private void checkAndUpdateInventory(InventoryActionRequestDto requestDto) {
+        Inventory inventory = inventoryRepoService.getByProductIdAndWarehouseId(
+                requestDto.getProductId(), requestDto.getWarehouseId());
         checkInventoryQuantity(inventory, requestDto.getQuantity());
         inventory.setQuantity(inventory.getQuantity() - requestDto.getQuantity());
         inventoryRepoService.save(inventory);
@@ -70,9 +65,8 @@ public class ShipmentStrategy implements InventoryActionStrategy {
     }
 
     private void setAndUpdateWarehouse(
-            InventoryAction inventoryAction, InventoryActionRequestDto requestDto, String email) {
-        Warehouse warehouse = warehouseRepoService
-                .getByIdIfUserHavePermission(requestDto.getWarehouseId(), email);
+            InventoryAction inventoryAction, InventoryActionRequestDto requestDto) {
+        Warehouse warehouse = warehouseRepoService.getById(requestDto.getWarehouseId());
         warehouse.setFreeCapacity(warehouse.getFreeCapacity() + requestDto.getQuantity());
         warehouseRepoService.save(warehouse);
         inventoryAction.setWarehouse(warehouse);

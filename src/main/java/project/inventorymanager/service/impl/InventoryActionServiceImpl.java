@@ -26,26 +26,24 @@ public class InventoryActionServiceImpl implements InventoryActionService {
 
     @Override
     @Transactional
-    public InventoryActionResponseDto save(InventoryActionRequestDto requestDto, String email) {
+    public InventoryActionResponseDto save(InventoryActionRequestDto requestDto) {
         InventoryActionType inventoryActionType
                 = inventoryActionTypeRepoService.getById(requestDto.getInventoryActionTypeId());
         InventoryActionStrategy inventoryActionStrategy
                 = inventoryActionStrategyFactory.getStrategy(inventoryActionType.getName());
-        InventoryAction inventoryAction = inventoryActionStrategy.doAction(requestDto, email);
+        InventoryAction inventoryAction = inventoryActionStrategy.doAction(requestDto);
         return inventoryActionMapper.toResponseDto(inventoryAction);
     }
 
     @Override
-    @Transactional
-    public InventoryActionResponseDto getById(Long id, String email) {
+    public InventoryActionResponseDto getById(Long id) {
         return inventoryActionMapper.toResponseDto(
-                inventoryActionRepoService.getByIdIfUserHavePermission(id, email));
+                inventoryActionRepoService.getById(id));
     }
 
     @Override
-    @Transactional
-    public List<InventoryActionResponseDto> findAll(Pageable pageable, String email) {
-        return inventoryActionRepoService.findAllByUserEmail(pageable, email).stream()
+    public List<InventoryActionResponseDto> findAll(Pageable pageable) {
+        return inventoryActionRepoService.findAll(pageable).stream()
                 .map(inventoryActionMapper::toResponseDto)
                 .toList();
     }
