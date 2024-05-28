@@ -1,8 +1,7 @@
 package project.inventorymanager.repositoryservice.impl;
 
-import java.util.Set;
-
 import jakarta.transaction.Transactional;
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
