@@ -13,6 +13,7 @@ import project.inventorymanager.model.inventoryaction.InventoryAction;
 public interface InventoryActionMapper {
     InventoryAction toModelWithQuantity(InventoryActionRequestDto requestDto);
 
+    @Mapping(target = "product", qualifiedByName = "toResponseDto")
     InventoryActionResponseDto toResponseDto(InventoryAction inventoryAction);
 
     @Mapping(target = "productId", source = "product.id")
