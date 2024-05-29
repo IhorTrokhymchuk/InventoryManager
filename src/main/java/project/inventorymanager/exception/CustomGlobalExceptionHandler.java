@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+import project.inventorymanager.exception.file.WorkWithFileExceptions;
 import project.inventorymanager.exception.inventory.InventoryQuantityException;
 import project.inventorymanager.exception.repository.EntityAlreadyExistsException;
 import project.inventorymanager.exception.repository.EntityNotFoundException;
@@ -100,6 +101,12 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<Object> handleCustomException(IllegalArgumentException ex) {
+        return getObjectResponseEntity(ex.getMessage(),
+                HttpStatusCode.valueOf(CONFLICT_STATUS_CODE));
+    }
+
+    @ExceptionHandler(WorkWithFileExceptions.class)
+    public ResponseEntity<Object> handleCustomException(WorkWithFileExceptions ex) {
         return getObjectResponseEntity(ex.getMessage(),
                 HttpStatusCode.valueOf(CONFLICT_STATUS_CODE));
     }
