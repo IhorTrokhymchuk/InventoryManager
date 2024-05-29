@@ -7,10 +7,10 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class ExcelFileConfig {
     @Value("${excel.file.path}")
-    private String filePath;
+    private String directoryPath;
 
     @Bean
-    public String filePath() {
-        return filePath;
+    public String directoryPath() {
+        return directoryPath;
     }
 }
