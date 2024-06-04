@@ -7,14 +7,17 @@ import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 import project.inventorymanager.dto.product.request.ProductRequestDto;
+import project.inventorymanager.dto.product.request.ProductSearchDto;
 import project.inventorymanager.dto.product.response.ProductResponseDto;
 import project.inventorymanager.mapper.ProductMapper;
 import project.inventorymanager.model.product.Category;
 import project.inventorymanager.model.product.Product;
 import project.inventorymanager.model.user.RoleType;
+import project.inventorymanager.repository.product.ProductSpecificationBuilder;
 import project.inventorymanager.repositoryservice.CategoryRepoService;
 import project.inventorymanager.repositoryservice.ProductRepoService;
 import project.inventorymanager.service.ProductService;
@@ -25,6 +28,7 @@ public class ProductServiceImpl implements ProductService {
     private final CategoryRepoService categoryRepoService;
     private final ProductRepoService productRepoService;
     private final ProductMapper productMapper;
+    private final ProductSpecificationBuilder productSpecificationBuilder;
 
     @Override
     @Transactional
@@ -83,5 +87,16 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public void deleteById(Long id) {
         productRepoService.deleteById(id);
+    }
+
+    @Override
+    public List<ProductResponseDto> search(Pageable pageable,
+                                           Collection<? extends GrantedAuthority> authorities,
+                                           ProductSearchDto requestDto) {
+        Specification<Product> specification = productSpecificationBuilder.build(requestDto);
+        Page<Product> products =
+                productRepoService.findAll(pageable, specification);
+
+        return products.stream().map(productMapper::toResponseDto).toList();
     }
 }

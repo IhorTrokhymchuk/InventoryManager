@@ -4,11 +4,12 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import project.inventorymanager.exception.repository.EntityAlreadyExistsException;
 import project.inventorymanager.exception.repository.EntityNotFoundException;
 import project.inventorymanager.model.product.Product;
-import project.inventorymanager.repository.ProductRepository;
+import project.inventorymanager.repository.product.ProductRepository;
 import project.inventorymanager.repositoryservice.ProductRepoService;
 
 @Service
@@ -37,6 +38,11 @@ public class ProductRepoServiceImpl implements ProductRepoService {
     @Override
     public Page<Product> findAll(Pageable pageable) {
         return productRepository.findAll(pageable);
+    }
+
+    @Override
+    public Page<Product> findAll(Pageable pageable, Specification<Product> specification) {
+        return productRepository.findAll(specification, pageable);
     }
 
     @Override
