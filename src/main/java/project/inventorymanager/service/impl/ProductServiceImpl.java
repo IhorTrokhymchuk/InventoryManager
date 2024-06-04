@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import project.inventorymanager.dto.product.request.ProductRequestDto;
 import project.inventorymanager.dto.product.request.ProductSearchDto;
 import project.inventorymanager.dto.product.response.ProductResponseDto;
+import project.inventorymanager.exception.user.UserDontHavePermissions;
 import project.inventorymanager.mapper.ProductMapper;
 import project.inventorymanager.model.product.Category;
 import project.inventorymanager.model.product.Product;
@@ -75,28 +76,52 @@ public class ProductServiceImpl implements ProductService {
                                             Collection<? extends GrantedAuthority> authorities) {
         Page<Product> products = productRepoService.findAll(pageable);
         if (authoritiesContainsNameEmployee(authorities)) {
-            return products.stream()
-                    .map(productMapper::toResponseDto)
-                    .toList();
+            return getProductResponseDtos(products);
         }
+        return getResponseDtosWithoutWholesalePrice(products);
+    }
+
+    private List<ProductResponseDto> getProductResponseDtos(Page<Product> products) {
+        return products.stream()
+                .map(productMapper::toResponseDto)
+                .toList();
+    }
+
+    private List<ProductResponseDto> getResponseDtosWithoutWholesalePrice(Page<Product> products) {
         return products.stream()
                 .map(productMapper::toResponseDtoWithoutWholesalePrice)
                 .toList();
     }
 
     @Override
-    public void deleteById(Long id) {
-        productRepoService.deleteById(id);
-    }
-
-    @Override
     public List<ProductResponseDto> search(Pageable pageable,
                                            Collection<? extends GrantedAuthority> authorities,
                                            ProductSearchDto requestDto) {
+        checkUserPermission(authorities, requestDto);
+
         Specification<Product> specification = productSpecificationBuilder.build(requestDto);
         Page<Product> products =
                 productRepoService.findAll(pageable, specification);
 
-        return products.stream().map(productMapper::toResponseDto).toList();
+        if (authoritiesContainsNameEmployee(authorities)) {
+            return getProductResponseDtos(products);
+        }
+        return getResponseDtosWithoutWholesalePrice(products);
+    }
+
+    private void checkUserPermission(
+            Collection<? extends GrantedAuthority> authorities, ProductSearchDto requestDto) {
+        if (!authoritiesContainsNameEmployee(authorities)) {
+            if (requestDto.getWholesalePriceMin() != null
+                    || requestDto.getWholesalePriceMax() != null) {
+                throw new UserDontHavePermissions("User with roles: " + authorities
+                        + " cant search by WholesalePriceMax and WholesalePriceMin");
+            }
+        }
+    }
+
+    @Override
+    public void deleteById(Long id) {
+        productRepoService.deleteById(id);
     }
 }
