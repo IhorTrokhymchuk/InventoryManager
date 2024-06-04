@@ -10,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
+import project.inventorymanager.dto.product.request.ProductPatchDto;
 import project.inventorymanager.dto.product.request.ProductRequestDto;
 import project.inventorymanager.dto.product.request.ProductSearchDto;
 import project.inventorymanager.dto.product.response.ProductResponseDto;
@@ -36,8 +37,7 @@ public class ProductServiceImpl implements ProductService {
     public ProductResponseDto save(ProductRequestDto requestDto) {
         productRepoService.isExistWithUniqCode(requestDto.getUniqCode());
         Product product = getProductWithoutCategories(requestDto);
-        Set<Category> categories = categoryRepoService.getAllByIdIn(requestDto.getCategoryIds());
-        product.setCategories(categories);
+        setCategories(requestDto.getCategoryIds(), product);
         return productMapper.toResponseDto(
                 productRepoService.save(product));
     }
@@ -46,7 +46,7 @@ public class ProductServiceImpl implements ProductService {
         Product product;
         if (productRepoService.ifExistDeletedWithUniqCode(requestDto.getUniqCode())) {
             product = productRepoService.getDeletedByUniqCode(requestDto.getUniqCode());
-            productMapper.updateProduct(product, requestDto);
+            productMapper.setParametersWithoutCategories(product, requestDto);
             product.setDeleted(false);
         } else {
             product = productMapper.toModelWithoutCategories(requestDto);
@@ -94,15 +94,27 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<ProductResponseDto> search(Pageable pageable,
-                                           Collection<? extends GrantedAuthority> authorities,
-                                           ProductSearchDto requestDto) {
-        checkUserPermission(authorities, requestDto);
+    public ProductResponseDto patchById(Long id, ProductPatchDto requestDto) {
+        Product product = productRepoService.getById(id);
+        productMapper.setParametersWithoutCategories(product, requestDto);
+        setCategories(requestDto.getCategoryIds(), product);
+        return productMapper.toResponseDto(productRepoService.save(product));
+    }
 
+    private void setCategories(Set<Long> requestDto, Product product) {
+        Set<Category> categories = categoryRepoService.getAllByIdIn(requestDto);
+        product.setCategories(categories);
+    }
+
+    @Override
+    public List<ProductResponseDto> search(
+            Pageable pageable,
+            Collection<? extends GrantedAuthority> authorities,
+            ProductSearchDto requestDto) {
+        checkUserPermission(authorities, requestDto);
         Specification<Product> specification = productSpecificationBuilder.build(requestDto);
         Page<Product> products =
                 productRepoService.findAll(pageable, specification);
-
         if (authoritiesContainsNameEmployee(authorities)) {
             return getProductResponseDtos(products);
         }

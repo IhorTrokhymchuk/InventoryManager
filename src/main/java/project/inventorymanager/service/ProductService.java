@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.List;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.GrantedAuthority;
+import project.inventorymanager.dto.product.request.ProductPatchDto;
 import project.inventorymanager.dto.product.request.ProductRequestDto;
 import project.inventorymanager.dto.product.request.ProductSearchDto;
 import project.inventorymanager.dto.product.response.ProductResponseDto;
@@ -22,4 +23,6 @@ public interface ProductService {
     List<ProductResponseDto> search(Pageable pageable,
                                     Collection<? extends GrantedAuthority> authorities,
                                     ProductSearchDto requestDto);
+
+    ProductResponseDto patchById(Long id, ProductPatchDto requestDto);
 }
