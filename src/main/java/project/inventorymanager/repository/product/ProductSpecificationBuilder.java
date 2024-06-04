@@ -6,12 +6,13 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 import project.inventorymanager.dto.product.request.ProductSearchDto;
 import project.inventorymanager.model.product.Product;
-import project.inventorymanager.repository.SpecificationBuilder;
-import project.inventorymanager.repository.SpecificationProviderManager;
+import project.inventorymanager.repository.specefication.SpecificationBuilder;
+import project.inventorymanager.repository.specefication.SpecificationProviderManager;
 
 @RequiredArgsConstructor
 @Component
-public class ProductSpecificationBuilder implements SpecificationBuilder<Product> {
+public class ProductSpecificationBuilder
+        implements SpecificationBuilder<Product, ProductSearchDto> {
     private final SpecificationProviderManager<Product, Long[]>
             specificationProviderManagerLongArr;
     private final SpecificationProviderManager<Product, BigDecimal>

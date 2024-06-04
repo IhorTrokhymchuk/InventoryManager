@@ -3,7 +3,7 @@ package project.inventorymanager.repository.product.specefications;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 import project.inventorymanager.model.product.Product;
-import project.inventorymanager.repository.SpecificationProvider;
+import project.inventorymanager.repository.specefication.SpecificationProvider;
 
 @Component
 public class UniqCodeSpecificationProvider

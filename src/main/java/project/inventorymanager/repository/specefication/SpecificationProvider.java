@@ -1,4 +1,4 @@
-package project.inventorymanager.repository;
+package project.inventorymanager.repository.specefication;
 
 import org.springframework.data.jpa.domain.Specification;
 

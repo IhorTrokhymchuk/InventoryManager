@@ -1,4 +1,4 @@
-package project.inventorymanager.repository;
+package project.inventorymanager.repository.inventory;
 
 import java.util.Optional;
 import org.springframework.data.domain.Page;

@@ -4,8 +4,8 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import project.inventorymanager.model.product.Product;
-import project.inventorymanager.repository.SpecificationProvider;
-import project.inventorymanager.repository.SpecificationProviderManager;
+import project.inventorymanager.repository.specefication.SpecificationProvider;
+import project.inventorymanager.repository.specefication.SpecificationProviderManager;
 
 @RequiredArgsConstructor
 @Component

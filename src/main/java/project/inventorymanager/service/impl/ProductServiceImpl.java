@@ -19,7 +19,7 @@ import project.inventorymanager.mapper.ProductMapper;
 import project.inventorymanager.model.product.Category;
 import project.inventorymanager.model.product.Product;
 import project.inventorymanager.model.user.RoleType;
-import project.inventorymanager.repository.product.ProductSpecificationBuilder;
+import project.inventorymanager.repository.specefication.SpecificationBuilder;
 import project.inventorymanager.repositoryservice.CategoryRepoService;
 import project.inventorymanager.repositoryservice.ProductRepoService;
 import project.inventorymanager.service.ProductService;
@@ -30,7 +30,7 @@ public class ProductServiceImpl implements ProductService {
     private final CategoryRepoService categoryRepoService;
     private final ProductRepoService productRepoService;
     private final ProductMapper productMapper;
-    private final ProductSpecificationBuilder productSpecificationBuilder;
+    private final SpecificationBuilder productSpecificationBuilder;
 
     @Override
     @Transactional
