@@ -5,6 +5,7 @@ import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.Named;
 import project.inventorymanager.config.MapperConfig;
+import project.inventorymanager.dto.product.request.ProductPatchDto;
 import project.inventorymanager.dto.product.request.ProductRequestDto;
 import project.inventorymanager.dto.product.response.ProductResponseDto;
 import project.inventorymanager.model.product.Product;
@@ -20,6 +21,9 @@ public interface ProductMapper {
 
     Product toModelWithoutCategories(ProductRequestDto requestDto);
 
-    void updateProduct(@MappingTarget Product product, ProductRequestDto requestDto);
+    void setParametersWithoutCategories(
+            @MappingTarget Product product, ProductRequestDto requestDto);
 
+    void setParametersWithoutCategories(
+            @MappingTarget Product product, ProductPatchDto requestDto);
 }

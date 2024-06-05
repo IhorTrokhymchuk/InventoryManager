@@ -7,7 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import project.inventorymanager.exception.repository.EntityNotFoundException;
 import project.inventorymanager.model.inventory.Inventory;
-import project.inventorymanager.repository.InventoryRepository;
+import project.inventorymanager.repository.inventory.InventoryRepository;
 import project.inventorymanager.repositoryservice.InventoryRepoService;
 
 @Service

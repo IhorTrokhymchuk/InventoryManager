@@ -1,0 +1,26 @@
+package project.inventorymanager.repository.product.specefications;
+
+import java.math.BigDecimal;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.stereotype.Component;
+import project.inventorymanager.model.product.Product;
+import project.inventorymanager.repository.specefication.SpecificationProvider;
+
+@Component
+public class RetailPriceMaxSpecificationProvider
+        implements SpecificationProvider<Product, BigDecimal> {
+    private static final String SPEC_KEY = "retailPriceMax";
+    private static final String FIELD_NAME = "retailPrice";
+    private static final BigDecimal MIN_VALUE = BigDecimal.valueOf(0);
+
+    @Override
+    public String getKey() {
+        return SPEC_KEY;
+    }
+
+    @Override
+    public Specification<Product> getSpecification(BigDecimal params) {
+        return (root, query, criteriaBuilder) -> criteriaBuilder
+                .between(root.get(FIELD_NAME), MIN_VALUE, params);
+    }
+}
