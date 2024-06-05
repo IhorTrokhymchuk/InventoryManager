@@ -26,6 +26,11 @@ public class StatisticFileRepoServiceImpl implements StatisticFileRepoService {
     }
 
     @Override
+    public void deleteById(Long id) {
+        statisticFileRepository.deleteById(id);
+    }
+
+    @Override
     public StatisticFile save(StatisticFile statisticFile) {
         return statisticFileRepository.save(statisticFile);
     }

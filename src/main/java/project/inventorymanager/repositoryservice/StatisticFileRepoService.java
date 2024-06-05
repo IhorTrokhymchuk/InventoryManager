@@ -11,4 +11,5 @@ public interface StatisticFileRepoService {
 
     StatisticFile save(StatisticFile statisticFile);
 
+    void deleteById(Long id);
 }

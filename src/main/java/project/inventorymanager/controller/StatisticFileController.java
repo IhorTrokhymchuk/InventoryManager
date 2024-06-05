@@ -5,11 +5,9 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import project.inventorymanager.dto.statisticfile.response.StatisticFileResponseDto;
 import project.inventorymanager.service.StatisticFileService;
 
@@ -39,5 +37,14 @@ public class StatisticFileController {
     @Operation(summary = "Get file by id", description = "Get available file by id")
     public String getDownloadUrl(@PathVariable Long id) {
         return statisticFileService.getDownloadUrl(id);
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @Operation(summary = "Delete file by id",
+            description = "Delete available file by id from db and dropbox")
+    public void deleteById(@PathVariable Long id) {
+        statisticFileService.deleteById(id);
     }
 }

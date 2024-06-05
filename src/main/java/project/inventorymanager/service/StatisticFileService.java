@@ -10,4 +10,6 @@ public interface StatisticFileService {
     StatisticFileResponseDto getById(Long id);
 
     String getDownloadUrl(Long id);
+
+    void deleteById(Long id);
 }

@@ -13,8 +13,8 @@ import org.springframework.context.annotation.Configuration;
 public class DropboxConfig {
     private static final String DROPBOX_URL = "inventory-manage-system/statistic";
 
-    @Value("${dropbox.access.token}")
-    private String accessToken;
+    @Value("${dropbox.app.token}")
+    private String appToken;
 
     private DbxRequestConfig dbxRequestConfig;
 
@@ -25,6 +25,6 @@ public class DropboxConfig {
 
     @Bean
     public DbxClientV2 dbxClientV2() {
-        return new DbxClientV2(dbxRequestConfig, accessToken);
+        return new DbxClientV2(dbxRequestConfig, appToken);
     }
 }

@@ -2,6 +2,8 @@ package project.inventorymanager.util;
 
 import com.dropbox.core.DbxException;
 import com.dropbox.core.v2.DbxClientV2;
+import com.dropbox.core.v2.files.DeleteErrorException;
+import com.dropbox.core.v2.files.DeleteResult;
 import com.dropbox.core.v2.files.FileMetadata;
 import com.dropbox.core.v2.files.Metadata;
 import com.dropbox.core.v2.users.SpaceUsage;
@@ -26,7 +28,8 @@ public class DropboxUtil {
         try {
             checkFreeSpace(fileSize);
             try (InputStream in = new FileInputStream(file)) {
-                FileMetadata metadata = dbxClientV2.files().uploadBuilder(SLASH + getFileName(filePath))
+                FileMetadata metadata = dbxClientV2.files()
+                        .uploadBuilder(SLASH + getFileName(filePath))
                         .uploadAndFinish(in);
                 return metadata.getId();
             }
@@ -60,6 +63,14 @@ public class DropboxUtil {
         } catch (DbxException e) {
             throw new WorkWithFileExceptions("Cant get download url with dropbox file id: "
                     + dropboxId + ", " + e.getMessage());
+        }
+    }
+
+    public void deleteFile(String dropboxId) {
+        try {
+            DeleteResult deleteResult = dbxClientV2.files().deleteV2(dropboxId);
+        } catch (DbxException e) {
+            throw new WorkWithFileExceptions("Error deleting file: " + e.getMessage());
         }
     }
 }
