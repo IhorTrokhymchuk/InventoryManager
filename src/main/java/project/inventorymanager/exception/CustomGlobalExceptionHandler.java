@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+import project.inventorymanager.exception.dropbox.DropboxApiException;
 import project.inventorymanager.exception.file.WorkWithFileExceptions;
 import project.inventorymanager.exception.inventory.InventoryQuantityException;
 import project.inventorymanager.exception.repository.EntityAlreadyExistsException;
@@ -107,6 +108,12 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
 
     @ExceptionHandler(WorkWithFileExceptions.class)
     public ResponseEntity<Object> handleCustomException(WorkWithFileExceptions ex) {
+        return getObjectResponseEntity(ex.getMessage(),
+                HttpStatusCode.valueOf(CONFLICT_STATUS_CODE));
+    }
+
+    @ExceptionHandler(DropboxApiException.class)
+    public ResponseEntity<Object> handleCustomException(DropboxApiException ex) {
         return getObjectResponseEntity(ex.getMessage(),
                 HttpStatusCode.valueOf(CONFLICT_STATUS_CODE));
     }
