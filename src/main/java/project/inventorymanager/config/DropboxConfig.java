@@ -1,30 +1,29 @@
 package project.inventorymanager.config;
 
-import com.dropbox.core.DbxRequestConfig;
-import com.dropbox.core.v2.DbxClientV2;
-import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 
 @Configuration
 @RequiredArgsConstructor
 public class DropboxConfig {
-    private static final String DROPBOX_URL = "inventory-manage-system/statistic";
-
-    @Value("${dropbox.app.token}")
-    private String appToken;
-
-    private DbxRequestConfig dbxRequestConfig;
-
-    @PostConstruct
-    public void init() {
-        dbxRequestConfig = DbxRequestConfig.newBuilder(DROPBOX_URL).build();
-    }
+    @Value("${dropbox.app.key}")
+    private final String appKey;
+    @Value("${dropbox.app.secret}")
+    private final String appSecret;
+    @Value("${dropbox.app.refresh_token}")
+    private final String refreshToken;
 
     @Bean
-    public DbxClientV2 dbxClientV2() {
-        return new DbxClientV2(dbxRequestConfig, appToken);
+    public MultiValueMap<String, String> dropboxParams() {
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("grant_type", "refresh_token");
+        params.add("refresh_token", refreshToken);
+        params.add("client_id", appKey);
+        params.add("client_secret", appSecret);
+        return params;
     }
 }

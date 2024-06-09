@@ -1,9 +1,7 @@
-package project.inventorymanager.util;
+package project.inventorymanager.dropbox;
 
 import com.dropbox.core.DbxException;
 import com.dropbox.core.v2.DbxClientV2;
-import com.dropbox.core.v2.files.DeleteErrorException;
-import com.dropbox.core.v2.files.DeleteResult;
 import com.dropbox.core.v2.files.FileMetadata;
 import com.dropbox.core.v2.files.Metadata;
 import com.dropbox.core.v2.users.SpaceUsage;
@@ -13,22 +11,25 @@ import java.io.IOException;
 import java.io.InputStream;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import project.inventorymanager.dropbox.provider.DropboxClientProvider;
+import project.inventorymanager.exception.dropbox.DropboxApiException;
 import project.inventorymanager.exception.file.WorkWithFileExceptions;
 
 @Component
 @RequiredArgsConstructor
 public class DropboxUtil {
     private static final String SLASH = "/";
-    private final DbxClientV2 dbxClientV2;
+    private final DropboxClientProvider dropboxClientProvider;
 
     public String uploadFile(String filePath) {
+        DbxClientV2 client = dropboxClientProvider.getClient();
         File file = new File(filePath);
         long fileSize = file.length();
 
         try {
             checkFreeSpace(fileSize);
             try (InputStream in = new FileInputStream(file)) {
-                FileMetadata metadata = dbxClientV2.files()
+                FileMetadata metadata = client.files()
                         .uploadBuilder(SLASH + getFileName(filePath))
                         .uploadAndFinish(in);
                 return metadata.getId();
@@ -46,7 +47,8 @@ public class DropboxUtil {
     }
 
     private long getFreeSpace() throws DbxException {
-        SpaceUsage spaceUsage = dbxClientV2.users().getSpaceUsage();
+        DbxClientV2 client = dropboxClientProvider.getClient();
+        SpaceUsage spaceUsage = client.users().getSpaceUsage();
         long usedSpace = spaceUsage.getUsed();
         long allocatedSpace = spaceUsage.getAllocation().getIndividualValue().getAllocated();
         return allocatedSpace - usedSpace;
@@ -57,20 +59,21 @@ public class DropboxUtil {
     }
 
     public String getDownloadUrl(String dropboxId) {
+        DbxClientV2 client = dropboxClientProvider.getClient();
         try {
-            Metadata metadata = dbxClientV2.files().getMetadata(dropboxId);
-            return dbxClientV2.files().getTemporaryLink(metadata.getPathLower()).getLink();
+            Metadata metadata = client.files().getMetadata(dropboxId);
+            return client.files().getTemporaryLink(metadata.getPathLower()).getLink();
         } catch (DbxException e) {
-            throw new WorkWithFileExceptions("Cant get download url with dropbox file id: "
+            throw new DropboxApiException("Cant get download url with dropbox file id: "
                     + dropboxId + ", " + e.getMessage());
         }
     }
 
     public void deleteFile(String dropboxId) {
         try {
-            DeleteResult deleteResult = dbxClientV2.files().deleteV2(dropboxId);
+            dropboxClientProvider.getClient().files().deleteV2(dropboxId);
         } catch (DbxException e) {
-            throw new WorkWithFileExceptions("Error deleting file: " + e.getMessage());
+            throw new DropboxApiException("Error deleting file: " + e.getMessage());
         }
     }
 }
