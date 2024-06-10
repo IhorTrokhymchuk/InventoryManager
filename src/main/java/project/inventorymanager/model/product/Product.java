@@ -29,11 +29,11 @@ public class Product {
     private Long id;
     @Column(nullable = false)
     private String name;
-    @Column(nullable = false, unique = true)
+    @Column(name = "uniq_code",nullable = false, unique = true)
     private String uniqCode;
-    @Column(nullable = false)
+    @Column(name = "wholesale_price",nullable = false)
     private BigDecimal wholesalePrice;
-    @Column(nullable = false)
+    @Column(name = "retail_price",nullable = false)
     private BigDecimal retailPrice;
     @ManyToMany
     @JoinTable(
