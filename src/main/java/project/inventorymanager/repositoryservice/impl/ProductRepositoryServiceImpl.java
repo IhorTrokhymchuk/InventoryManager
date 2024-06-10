@@ -58,6 +58,7 @@ public class ProductRepositoryServiceImpl implements ProductRepositoryService {
     public void deleteById(Long id) {
         if (productRepository.existsById(id)) {
             productRepository.deleteById(id);
+            return;
         }
         throw new EntityNotFoundException("Cant find product with id: " + id);
 
