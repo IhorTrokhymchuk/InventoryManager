@@ -1,9 +1,9 @@
 package project.inventorymanager.service.impl;
 
+import jakarta.transaction.Transactional;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import project.inventorymanager.dropbox.DropboxUtil;
@@ -22,7 +22,7 @@ import project.inventorymanager.util.FileUtil;
 @Component
 @RequiredArgsConstructor
 public class ExcelCreatorServiceImpl implements ExcelCreatorService {
-    private static final String SAMPLE_FILE_NAME = "%s-%s-%s.xlsx";
+
     private final String directoryPath;
     private final InventoryActionRepositoryService inventoryActionRepositoryService;
     private final InventoryActionMapper inventoryActionMapper;
@@ -32,49 +32,33 @@ public class ExcelCreatorServiceImpl implements ExcelCreatorService {
     private final UserRepositoryService userRepositoryService;
 
     @Override
+    @Transactional
     public String createInventoryActionStatistic(DatesDto requestDto, String email) {
-        //for sample
-        LocalDate dateFrom = requestDto.getFromDate();
-        LocalDate dateTo = requestDto.getToDate();
+        List<InventoryActionExcelDto> actionExcelDtoList
+                = getActionExcelDtos(requestDto.getFromDate(), requestDto.getToDate());
+        String excelFile
+                = statisticExcelCreatorTable.createExcelFile(actionExcelDtoList, directoryPath);
+        String dropboxId = dropboxUtil.uploadFile(excelFile);
+        StatisticFile statisticFile = getStatisticFile(email, requestDto, dropboxId);
+        fileRepositoryService.save(statisticFile);
+        FileUtil.deleteFile(excelFile);
+        return dropboxUtil.getDownloadUrl(dropboxId);
+    }
 
-        //name creating
-        String id = generateUniqueId();
-        String filename = directoryPath + SAMPLE_FILE_NAME.formatted(id, dateFrom, dateTo);
-
-        //get all actions by date
-        List<InventoryActionExcelDto> actionExcelDtoList =
-                inventoryActionRepositoryService.getAllByDates(dateFrom, dateTo).stream()
+    private List<InventoryActionExcelDto> getActionExcelDtos(LocalDate dateFrom, LocalDate dateTo) {
+        return inventoryActionRepositoryService.getAllByDates(dateFrom, dateTo).stream()
                 .map(inventoryActionMapper::toExcelDto)
                 .toList();
+    }
 
-        //generate file
-        statisticExcelCreatorTable.createExcelFile(actionExcelDtoList, filename);
-
-        //upload to drop box and get uniq id
-        String dropboxId = dropboxUtil.uploadFile(filename);
-
-        //generate file entity
+    private StatisticFile getStatisticFile(String email, DatesDto datesDto, String dropboxId) {
         StatisticFile statisticFile = new StatisticFile();
         User user = userRepositoryService.getByEmail(email);
         statisticFile.setUser(user);
         statisticFile.setCreatedAt(LocalDateTime.now());
-        statisticFile.setDateFrom(dateFrom);
-        statisticFile.setDateTo(dateTo);
+        statisticFile.setDateFrom(datesDto.getFromDate());
+        statisticFile.setDateTo(datesDto.getToDate());
         statisticFile.setDropboxId(dropboxId);
-
-        //save entity to db
-        fileRepositoryService.save(statisticFile);
-
-        //delete local file
-        FileUtil.deleteFile(filename);
-
-        //get url to dropbox file and return
-        return dropboxUtil.getDownloadUrl(dropboxId);
-
-    }
-
-    private String generateUniqueId() {
-        UUID uuid = UUID.randomUUID();
-        return uuid.toString();
+        return statisticFile;
     }
 }
