@@ -22,7 +22,6 @@ import project.inventorymanager.util.FileUtil;
 @Component
 @RequiredArgsConstructor
 public class ExcelCreatorServiceImpl implements ExcelCreatorService {
-
     private final String directoryPath;
     private final InventoryActionRepositoryService inventoryActionRepositoryService;
     private final InventoryActionMapper inventoryActionMapper;
