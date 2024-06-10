@@ -5,7 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import project.inventorymanager.model.inventory.Inventory;
 
-public interface InventoryRepoService {
+public interface InventoryRepositoryService {
     Inventory save(Inventory inventory);
 
     Inventory getByProductIdAndWarehouseId(Long productId, Long warehouseId);

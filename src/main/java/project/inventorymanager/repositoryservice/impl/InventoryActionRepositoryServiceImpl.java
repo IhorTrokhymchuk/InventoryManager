@@ -9,11 +9,11 @@ import org.springframework.stereotype.Service;
 import project.inventorymanager.exception.repository.EntityNotFoundException;
 import project.inventorymanager.model.inventoryaction.InventoryAction;
 import project.inventorymanager.repository.InventoryActionRepository;
-import project.inventorymanager.repositoryservice.InventoryActionRepoService;
+import project.inventorymanager.repositoryservice.InventoryActionRepositoryService;
 
 @Service
 @RequiredArgsConstructor
-public class InventoryActionRepoServiceImpl implements InventoryActionRepoService {
+public class InventoryActionRepositoryServiceImpl implements InventoryActionRepositoryService {
     private final InventoryActionRepository inventoryActionRepository;
 
     @Override

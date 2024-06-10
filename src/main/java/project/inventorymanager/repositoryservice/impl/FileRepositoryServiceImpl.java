@@ -7,11 +7,11 @@ import org.springframework.stereotype.Repository;
 import project.inventorymanager.exception.repository.EntityNotFoundException;
 import project.inventorymanager.model.file.StatisticFile;
 import project.inventorymanager.repository.StatisticFileRepository;
-import project.inventorymanager.repositoryservice.StatisticFileRepoService;
+import project.inventorymanager.repositoryservice.FileRepositoryService;
 
 @Repository
 @RequiredArgsConstructor
-public class StatisticFileRepoServiceImpl implements StatisticFileRepoService {
+public class FileRepositoryServiceImpl implements FileRepositoryService {
     private final StatisticFileRepository statisticFileRepository;
 
     @Override

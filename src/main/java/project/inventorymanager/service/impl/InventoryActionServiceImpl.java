@@ -10,8 +10,8 @@ import project.inventorymanager.dto.inventoryaction.response.InventoryActionResp
 import project.inventorymanager.mapper.InventoryActionMapper;
 import project.inventorymanager.model.inventoryaction.InventoryAction;
 import project.inventorymanager.model.inventoryaction.InventoryActionType;
-import project.inventorymanager.repositoryservice.InventoryActionRepoService;
-import project.inventorymanager.repositoryservice.InventoryActionTypeRepoService;
+import project.inventorymanager.repositoryservice.InventoryActionRepositoryService;
+import project.inventorymanager.repositoryservice.InventoryActionTypeRepositoryService;
 import project.inventorymanager.service.InventoryActionService;
 import project.inventorymanager.service.inventoryactionstrategy.InventoryActionStrategy;
 import project.inventorymanager.service.inventoryactionstrategy.InventoryActionStrategyFactory;
@@ -20,15 +20,15 @@ import project.inventorymanager.service.inventoryactionstrategy.InventoryActionS
 @Service
 public class InventoryActionServiceImpl implements InventoryActionService {
     private final InventoryActionStrategyFactory inventoryActionStrategyFactory;
-    private final InventoryActionTypeRepoService inventoryActionTypeRepoService;
-    private final InventoryActionRepoService inventoryActionRepoService;
+    private final InventoryActionTypeRepositoryService inventoryActionTypeRepositoryService;
+    private final InventoryActionRepositoryService inventoryActionRepositoryService;
     private final InventoryActionMapper inventoryActionMapper;
 
     @Override
     @Transactional
     public InventoryActionResponseDto save(InventoryActionRequestDto requestDto) {
-        InventoryActionType inventoryActionType
-                = inventoryActionTypeRepoService.getById(requestDto.getInventoryActionTypeId());
+        InventoryActionType inventoryActionType = inventoryActionTypeRepositoryService
+                .getById(requestDto.getInventoryActionTypeId());
         InventoryActionStrategy inventoryActionStrategy
                 = inventoryActionStrategyFactory.getStrategy(inventoryActionType.getName());
         InventoryAction inventoryAction = inventoryActionStrategy.doAction(requestDto);
@@ -38,12 +38,12 @@ public class InventoryActionServiceImpl implements InventoryActionService {
     @Override
     public InventoryActionResponseDto getById(Long id) {
         return inventoryActionMapper.toResponseDto(
-                inventoryActionRepoService.getById(id));
+                inventoryActionRepositoryService.getById(id));
     }
 
     @Override
     public List<InventoryActionResponseDto> findAll(Pageable pageable) {
-        return inventoryActionRepoService.findAll(pageable).stream()
+        return inventoryActionRepositoryService.findAll(pageable).stream()
                 .map(inventoryActionMapper::toResponseDto)
                 .toList();
     }

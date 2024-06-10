@@ -13,9 +13,9 @@ import project.inventorymanager.exceldata.filecreator.StatisticExcelCreator;
 import project.inventorymanager.mapper.InventoryActionMapper;
 import project.inventorymanager.model.file.StatisticFile;
 import project.inventorymanager.model.user.User;
-import project.inventorymanager.repositoryservice.InventoryActionRepoService;
-import project.inventorymanager.repositoryservice.StatisticFileRepoService;
-import project.inventorymanager.repositoryservice.UserRepoService;
+import project.inventorymanager.repositoryservice.FileRepositoryService;
+import project.inventorymanager.repositoryservice.InventoryActionRepositoryService;
+import project.inventorymanager.repositoryservice.UserRepositoryService;
 import project.inventorymanager.service.ExcelCreatorService;
 import project.inventorymanager.util.FileUtil;
 
@@ -24,12 +24,12 @@ import project.inventorymanager.util.FileUtil;
 public class ExcelCreatorServiceImpl implements ExcelCreatorService {
     private static final String SAMPLE_FILE_NAME = "%s-%s-%s.xlsx";
     private final String directoryPath;
-    private final InventoryActionRepoService inventoryActionRepoService;
+    private final InventoryActionRepositoryService inventoryActionRepositoryService;
     private final InventoryActionMapper inventoryActionMapper;
     private final StatisticExcelCreator statisticExcelCreatorTable;
     private final DropboxUtil dropboxUtil;
-    private final StatisticFileRepoService statisticFileRepoService;
-    private final UserRepoService userRepoService;
+    private final FileRepositoryService fileRepositoryService;
+    private final UserRepositoryService userRepositoryService;
 
     @Override
     public String createInventoryActionStatistic(DatesDto requestDto, String email) {
@@ -43,7 +43,7 @@ public class ExcelCreatorServiceImpl implements ExcelCreatorService {
 
         //get all actions by date
         List<InventoryActionExcelDto> actionExcelDtoList =
-                inventoryActionRepoService.getAllByDates(dateFrom, dateTo).stream()
+                inventoryActionRepositoryService.getAllByDates(dateFrom, dateTo).stream()
                 .map(inventoryActionMapper::toExcelDto)
                 .toList();
 
@@ -55,7 +55,7 @@ public class ExcelCreatorServiceImpl implements ExcelCreatorService {
 
         //generate file entity
         StatisticFile statisticFile = new StatisticFile();
-        User user = userRepoService.getByEmail(email);
+        User user = userRepositoryService.getByEmail(email);
         statisticFile.setUser(user);
         statisticFile.setCreatedAt(LocalDateTime.now());
         statisticFile.setDateFrom(dateFrom);
@@ -63,7 +63,7 @@ public class ExcelCreatorServiceImpl implements ExcelCreatorService {
         statisticFile.setDropboxId(dropboxId);
 
         //save entity to db
-        statisticFileRepoService.save(statisticFile);
+        fileRepositoryService.save(statisticFile);
 
         //delete local file
         FileUtil.deleteFile(filename);

@@ -8,37 +8,37 @@ import project.inventorymanager.dto.warehouse.request.WarehouseRequestDto;
 import project.inventorymanager.dto.warehouse.response.WarehouseResponseDto;
 import project.inventorymanager.mapper.WarehouseMapper;
 import project.inventorymanager.model.warehouse.Warehouse;
-import project.inventorymanager.repositoryservice.WarehouseRepoService;
+import project.inventorymanager.repositoryservice.WarehouseRepositoryService;
 import project.inventorymanager.service.WarehouseService;
 
 @Service
 @RequiredArgsConstructor
 public class WarehouseServiceImpl implements WarehouseService {
-    private final WarehouseRepoService warehouseRepoService;
+    private final WarehouseRepositoryService warehouseRepositoryService;
     private final WarehouseMapper warehouseMapper;
 
     @Override
     public WarehouseResponseDto save(WarehouseRequestDto requestDto) {
         Warehouse warehouse = warehouseMapper.toModelWithoutUserAndFreeCapacity(requestDto);
         warehouse.setFreeCapacity(requestDto.getCapacity());
-        return warehouseMapper.toResponseDto(warehouseRepoService.save(warehouse));
+        return warehouseMapper.toResponseDto(warehouseRepositoryService.save(warehouse));
     }
 
     @Override
     public WarehouseResponseDto getById(Long id) {
         return warehouseMapper.toResponseDto(
-                warehouseRepoService.getById(id));
+                warehouseRepositoryService.getById(id));
     }
 
     @Override
     public List<WarehouseResponseDto> findAll(Pageable pageable) {
-        return warehouseRepoService.findAll(pageable).stream()
+        return warehouseRepositoryService.findAll(pageable).stream()
                 .map(warehouseMapper::toResponseDto)
                 .toList();
     }
 
     @Override
     public void deleteById(Long id) {
-        warehouseRepoService.deleteById(id);
+        warehouseRepositoryService.deleteById(id);
     }
 }

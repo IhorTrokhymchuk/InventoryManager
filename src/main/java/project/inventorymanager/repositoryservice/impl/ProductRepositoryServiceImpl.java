@@ -10,11 +10,11 @@ import project.inventorymanager.exception.repository.EntityAlreadyExistsExceptio
 import project.inventorymanager.exception.repository.EntityNotFoundException;
 import project.inventorymanager.model.product.Product;
 import project.inventorymanager.repository.product.ProductRepository;
-import project.inventorymanager.repositoryservice.ProductRepoService;
+import project.inventorymanager.repositoryservice.ProductRepositoryService;
 
 @Service
 @RequiredArgsConstructor
-public class ProductRepoServiceImpl implements ProductRepoService {
+public class ProductRepositoryServiceImpl implements ProductRepositoryService {
     private final ProductRepository productRepository;
 
     @Override

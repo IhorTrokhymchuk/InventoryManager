@@ -17,7 +17,6 @@ public class FileTask {
 
     @Scheduled(fixedDelay = 60 * 60 * 1000)
     public void ifBookingUnconfirmedOneHour() {
-        System.out.println("run delete");
         try {
             Path directory = Paths.get(filePath);
             if (Files.exists(directory) && Files.isDirectory(directory)) {

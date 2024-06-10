@@ -5,7 +5,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import project.inventorymanager.model.product.Product;
 
-public interface ProductRepoService {
+public interface ProductRepositoryService {
     Product save(Product product);
 
     Product getById(Long id);

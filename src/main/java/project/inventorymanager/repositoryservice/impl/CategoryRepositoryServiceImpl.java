@@ -10,11 +10,11 @@ import project.inventorymanager.exception.repository.EntityAlreadyExistsExceptio
 import project.inventorymanager.exception.repository.EntityNotFoundException;
 import project.inventorymanager.model.product.Category;
 import project.inventorymanager.repository.CategoryRepository;
-import project.inventorymanager.repositoryservice.CategoryRepoService;
+import project.inventorymanager.repositoryservice.CategoryRepositoryService;
 
 @Repository
 @RequiredArgsConstructor
-public class CategoryRepoServiceImpl implements CategoryRepoService {
+public class CategoryRepositoryServiceImpl implements CategoryRepositoryService {
     private final CategoryRepository categoryRepository;
 
     @Override

@@ -9,27 +9,27 @@ import project.inventorymanager.dto.category.request.CategoryRequestDto;
 import project.inventorymanager.dto.category.response.CategoryResponseDto;
 import project.inventorymanager.mapper.CategoryMapper;
 import project.inventorymanager.model.product.Category;
-import project.inventorymanager.repositoryservice.CategoryRepoService;
+import project.inventorymanager.repositoryservice.CategoryRepositoryService;
 import project.inventorymanager.service.CategoryService;
 
 @Service
 @RequiredArgsConstructor
 public class CategoryServiceImpl implements CategoryService {
-    private final CategoryRepoService categoryRepoService;
+    private final CategoryRepositoryService categoryRepositoryService;
     private final CategoryMapper categoryMapper;
 
     @Override
     @Transactional
     public CategoryResponseDto save(CategoryRequestDto requestDto) {
-        categoryRepoService.isExistWithName(requestDto.getName());
+        categoryRepositoryService.isExistWithName(requestDto.getName());
         Category category = getCategory(requestDto);
-        return categoryMapper.toResponseDto(categoryRepoService.save(category));
+        return categoryMapper.toResponseDto(categoryRepositoryService.save(category));
     }
 
     private Category getCategory(CategoryRequestDto requestDto) {
         Category category;
-        if (categoryRepoService.ifExistDeletedWithName(requestDto.getName())) {
-            category = categoryRepoService.getDeletedByName(requestDto.getName());
+        if (categoryRepositoryService.ifExistDeletedWithName(requestDto.getName())) {
+            category = categoryRepositoryService.getDeletedByName(requestDto.getName());
             categoryMapper.updateCategory(category, requestDto);
         } else {
             category = categoryMapper.toModel(requestDto);
@@ -39,18 +39,18 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public CategoryResponseDto getById(Long id) {
-        return categoryMapper.toResponseDto(categoryRepoService.getById(id));
+        return categoryMapper.toResponseDto(categoryRepositoryService.getById(id));
     }
 
     @Override
     public List<CategoryResponseDto> findAll(Pageable pageable) {
-        return categoryRepoService.findAll(pageable).stream()
+        return categoryRepositoryService.findAll(pageable).stream()
                 .map(categoryMapper::toResponseDto)
                 .toList();
     }
 
     @Override
     public void deleteById(Long id) {
-        categoryRepoService.deleteById(id);
+        categoryRepositoryService.deleteById(id);
     }
 }

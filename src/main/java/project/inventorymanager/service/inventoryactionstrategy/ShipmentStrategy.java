@@ -11,20 +11,20 @@ import project.inventorymanager.model.inventoryaction.InventoryAction;
 import project.inventorymanager.model.inventoryaction.InventoryActionType;
 import project.inventorymanager.model.product.Product;
 import project.inventorymanager.model.warehouse.Warehouse;
-import project.inventorymanager.repositoryservice.InventoryActionRepoService;
-import project.inventorymanager.repositoryservice.InventoryActionTypeRepoService;
-import project.inventorymanager.repositoryservice.InventoryRepoService;
-import project.inventorymanager.repositoryservice.ProductRepoService;
-import project.inventorymanager.repositoryservice.WarehouseRepoService;
+import project.inventorymanager.repositoryservice.InventoryActionRepositoryService;
+import project.inventorymanager.repositoryservice.InventoryActionTypeRepositoryService;
+import project.inventorymanager.repositoryservice.InventoryRepositoryService;
+import project.inventorymanager.repositoryservice.ProductRepositoryService;
+import project.inventorymanager.repositoryservice.WarehouseRepositoryService;
 
 @Component
 @RequiredArgsConstructor
 public class ShipmentStrategy implements InventoryActionStrategy {
-    private final InventoryActionTypeRepoService inventoryActionTypeRepoService;
-    private final ProductRepoService productRepoService;
-    private final WarehouseRepoService warehouseRepoService;
-    private final InventoryActionRepoService inventoryActionRepoService;
-    private final InventoryRepoService inventoryRepoService;
+    private final InventoryActionTypeRepositoryService inventoryActionTypeRepositoryService;
+    private final ProductRepositoryService productRepositoryService;
+    private final WarehouseRepositoryService warehouseRepositoryService;
+    private final InventoryActionRepositoryService inventoryActionRepositoryService;
+    private final InventoryRepositoryService inventoryRepositoryService;
     private final InventoryActionMapper inventoryActionMapper;
 
     @Override
@@ -37,21 +37,21 @@ public class ShipmentStrategy implements InventoryActionStrategy {
         InventoryAction inventoryAction = inventoryActionMapper.toModelWithQuantity(requestDto);
         checkAndUpdateInventory(requestDto);
         setAndUpdateWarehouse(inventoryAction, requestDto);
-        Product product = productRepoService.getById(
+        Product product = productRepositoryService.getById(
                 requestDto.getProductId());
         inventoryAction.setProduct(product);
         inventoryAction.setCreatedAt(LocalDateTime.now());
         setInventoryActionType(inventoryAction);
         setPrices(inventoryAction, product);
-        return inventoryActionRepoService.save(inventoryAction);
+        return inventoryActionRepositoryService.save(inventoryAction);
     }
 
     private void checkAndUpdateInventory(InventoryActionRequestDto requestDto) {
-        Inventory inventory = inventoryRepoService.getByProductIdAndWarehouseId(
+        Inventory inventory = inventoryRepositoryService.getByProductIdAndWarehouseId(
                 requestDto.getProductId(), requestDto.getWarehouseId());
         checkInventoryQuantity(inventory, requestDto.getQuantity());
         inventory.setQuantity(inventory.getQuantity() - requestDto.getQuantity());
-        inventoryRepoService.save(inventory);
+        inventoryRepositoryService.save(inventory);
     }
 
     private void checkInventoryQuantity(Inventory inventory, Long quantity) {
@@ -66,14 +66,14 @@ public class ShipmentStrategy implements InventoryActionStrategy {
 
     private void setAndUpdateWarehouse(
             InventoryAction inventoryAction, InventoryActionRequestDto requestDto) {
-        Warehouse warehouse = warehouseRepoService.getById(requestDto.getWarehouseId());
+        Warehouse warehouse = warehouseRepositoryService.getById(requestDto.getWarehouseId());
         warehouse.setFreeCapacity(warehouse.getFreeCapacity() + requestDto.getQuantity());
-        warehouseRepoService.save(warehouse);
+        warehouseRepositoryService.save(warehouse);
         inventoryAction.setWarehouse(warehouse);
     }
 
     private void setInventoryActionType(InventoryAction inventoryAction) {
-        InventoryActionType actionType = inventoryActionTypeRepoService
+        InventoryActionType actionType = inventoryActionTypeRepositoryService
                 .getByTypeName(InventoryActionType.InventoryActionTypeName.SHIPMENT);
         inventoryAction.setInventoryActionType(actionType);
     }

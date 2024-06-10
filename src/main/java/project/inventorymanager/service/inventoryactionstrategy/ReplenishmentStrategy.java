@@ -13,20 +13,20 @@ import project.inventorymanager.model.inventoryaction.InventoryAction;
 import project.inventorymanager.model.inventoryaction.InventoryActionType;
 import project.inventorymanager.model.product.Product;
 import project.inventorymanager.model.warehouse.Warehouse;
-import project.inventorymanager.repositoryservice.InventoryActionRepoService;
-import project.inventorymanager.repositoryservice.InventoryActionTypeRepoService;
-import project.inventorymanager.repositoryservice.InventoryRepoService;
-import project.inventorymanager.repositoryservice.ProductRepoService;
-import project.inventorymanager.repositoryservice.WarehouseRepoService;
+import project.inventorymanager.repositoryservice.InventoryActionRepositoryService;
+import project.inventorymanager.repositoryservice.InventoryActionTypeRepositoryService;
+import project.inventorymanager.repositoryservice.InventoryRepositoryService;
+import project.inventorymanager.repositoryservice.ProductRepositoryService;
+import project.inventorymanager.repositoryservice.WarehouseRepositoryService;
 
 @Component
 @RequiredArgsConstructor
 public class ReplenishmentStrategy implements InventoryActionStrategy {
-    private final InventoryActionTypeRepoService inventoryActionTypeRepoService;
-    private final ProductRepoService productRepoService;
-    private final WarehouseRepoService warehouseRepoService;
-    private final InventoryActionRepoService inventoryActionRepoService;
-    private final InventoryRepoService inventoryRepoService;
+    private final InventoryActionTypeRepositoryService inventoryActionTypeRepositoryService;
+    private final ProductRepositoryService productRepositoryService;
+    private final WarehouseRepositoryService warehouseRepositoryService;
+    private final InventoryActionRepositoryService inventoryActionRepositoryService;
+    private final InventoryRepositoryService inventoryRepositoryService;
     private final InventoryActionMapper inventoryActionMapper;
 
     @Override
@@ -38,16 +38,16 @@ public class ReplenishmentStrategy implements InventoryActionStrategy {
     @Transactional
     public InventoryAction doAction(InventoryActionRequestDto requestDto) {
         InventoryAction inventoryAction = inventoryActionMapper.toModelWithQuantity(requestDto);
-        Product product = productRepoService
+        Product product = productRepositoryService
                 .getById(requestDto.getProductId());
-        Warehouse warehouse = warehouseRepoService.getById(requestDto.getWarehouseId());
+        Warehouse warehouse = warehouseRepositoryService.getById(requestDto.getWarehouseId());
         setAndUpdateWarehouse(inventoryAction, warehouse, requestDto);
         updateOrCreateInventory(product, warehouse, requestDto.getQuantity());
         inventoryAction.setProduct(product);
         setInventoryActionType(inventoryAction);
         inventoryAction.setCreatedAt(LocalDateTime.now());
         setPrices(inventoryAction, product);
-        return inventoryActionRepoService.save(inventoryAction);
+        return inventoryActionRepositoryService.save(inventoryAction);
     }
 
     private void setAndUpdateWarehouse(
@@ -62,14 +62,14 @@ public class ReplenishmentStrategy implements InventoryActionStrategy {
                             + ". Available free capacity: " + warehouse.getFreeCapacity());
         }
         warehouse.setFreeCapacity(warehouse.getFreeCapacity() - requestDto.getQuantity());
-        warehouseRepoService.save(warehouse);
+        warehouseRepositoryService.save(warehouse);
         inventoryAction.setWarehouse(warehouse);
     }
 
     private void updateOrCreateInventory(
             Product product, Warehouse warehouse, Long quantity) {
         Optional<Inventory> optionalInventory
-                = inventoryRepoService.findByProductIdAndWarehouseId(
+                = inventoryRepositoryService.findByProductIdAndWarehouseId(
                         product.getId(), warehouse.getId());
         Inventory inventory;
         if (optionalInventory.isPresent()) {
@@ -81,11 +81,11 @@ public class ReplenishmentStrategy implements InventoryActionStrategy {
             inventory.setWarehouse(warehouse);
             inventory.setQuantity(quantity);
         }
-        inventoryRepoService.save(inventory);
+        inventoryRepositoryService.save(inventory);
     }
 
     private void setInventoryActionType(InventoryAction inventoryAction) {
-        InventoryActionType actionType = inventoryActionTypeRepoService
+        InventoryActionType actionType = inventoryActionTypeRepositoryService
                 .getByTypeName(InventoryActionType.InventoryActionTypeName.REPLENISHMENT);
         inventoryAction.setInventoryActionType(actionType);
     }

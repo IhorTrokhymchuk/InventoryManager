@@ -6,7 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import project.inventorymanager.model.inventoryaction.InventoryAction;
 
-public interface InventoryActionRepoService {
+public interface InventoryActionRepositoryService {
     InventoryAction save(InventoryAction inventoryAction);
 
     InventoryAction getById(Long id);
