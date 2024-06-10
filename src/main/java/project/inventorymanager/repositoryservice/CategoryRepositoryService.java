@@ -5,7 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import project.inventorymanager.model.product.Category;
 
-public interface CategoryRepoService {
+public interface CategoryRepositoryService {
     Category save(Category category);
 
     Category getById(Long id);

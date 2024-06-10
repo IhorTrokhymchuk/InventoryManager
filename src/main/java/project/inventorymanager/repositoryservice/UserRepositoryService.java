@@ -2,7 +2,7 @@ package project.inventorymanager.repositoryservice;
 
 import project.inventorymanager.model.user.User;
 
-public interface UserRepoService {
+public interface UserRepositoryService {
     User getByEmail(String email);
 
     User getById(Long id);

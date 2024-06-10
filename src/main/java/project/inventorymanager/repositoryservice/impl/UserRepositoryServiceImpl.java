@@ -7,11 +7,11 @@ import project.inventorymanager.exception.repository.EntityAlreadyExistsExceptio
 import project.inventorymanager.exception.repository.EntityNotFoundException;
 import project.inventorymanager.model.user.User;
 import project.inventorymanager.repository.UserRepository;
-import project.inventorymanager.repositoryservice.UserRepoService;
+import project.inventorymanager.repositoryservice.UserRepositoryService;
 
 @Service
 @RequiredArgsConstructor
-public class UserRepoServiceImpl implements UserRepoService {
+public class UserRepositoryServiceImpl implements UserRepositoryService {
     private final UserRepository userRepository;
 
     @Override

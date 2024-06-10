@@ -20,32 +20,32 @@ import project.inventorymanager.model.product.Category;
 import project.inventorymanager.model.product.Product;
 import project.inventorymanager.model.user.RoleType;
 import project.inventorymanager.repository.specefication.SpecificationBuilder;
-import project.inventorymanager.repositoryservice.CategoryRepoService;
-import project.inventorymanager.repositoryservice.ProductRepoService;
+import project.inventorymanager.repositoryservice.CategoryRepositoryService;
+import project.inventorymanager.repositoryservice.ProductRepositoryService;
 import project.inventorymanager.service.ProductService;
 
 @Service
 @RequiredArgsConstructor
 public class ProductServiceImpl implements ProductService {
-    private final CategoryRepoService categoryRepoService;
-    private final ProductRepoService productRepoService;
+    private final CategoryRepositoryService categoryRepositoryService;
+    private final ProductRepositoryService productRepositoryService;
     private final ProductMapper productMapper;
     private final SpecificationBuilder productSpecificationBuilder;
 
     @Override
     @Transactional
     public ProductResponseDto save(ProductRequestDto requestDto) {
-        productRepoService.isExistWithUniqCode(requestDto.getUniqCode());
+        productRepositoryService.isExistWithUniqCode(requestDto.getUniqCode());
         Product product = getProductWithoutCategories(requestDto);
         setCategories(requestDto.getCategoryIds(), product);
         return productMapper.toResponseDto(
-                productRepoService.save(product));
+                productRepositoryService.save(product));
     }
 
     private Product getProductWithoutCategories(ProductRequestDto requestDto) {
         Product product;
-        if (productRepoService.ifExistDeletedWithUniqCode(requestDto.getUniqCode())) {
-            product = productRepoService.getDeletedByUniqCode(requestDto.getUniqCode());
+        if (productRepositoryService.ifExistDeletedWithUniqCode(requestDto.getUniqCode())) {
+            product = productRepositoryService.getDeletedByUniqCode(requestDto.getUniqCode());
             productMapper.setParametersWithoutCategories(product, requestDto);
             product.setDeleted(false);
         } else {
@@ -56,7 +56,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductResponseDto getById(Long id, Collection<? extends GrantedAuthority> authorities) {
-        Product product = productRepoService.getById(id);
+        Product product = productRepositoryService.getById(id);
         if (authoritiesContainsNameEmployee(authorities)) {
             return productMapper.toResponseDto(product);
         }
@@ -74,7 +74,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public List<ProductResponseDto> findAll(Pageable pageable,
                                             Collection<? extends GrantedAuthority> authorities) {
-        Page<Product> products = productRepoService.findAll(pageable);
+        Page<Product> products = productRepositoryService.findAll(pageable);
         if (authoritiesContainsNameEmployee(authorities)) {
             return getProductResponseDtos(products);
         }
@@ -95,14 +95,14 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductResponseDto patchById(Long id, ProductPatchDto requestDto) {
-        Product product = productRepoService.getById(id);
+        Product product = productRepositoryService.getById(id);
         productMapper.setParametersWithoutCategories(product, requestDto);
         setCategories(requestDto.getCategoryIds(), product);
-        return productMapper.toResponseDto(productRepoService.save(product));
+        return productMapper.toResponseDto(productRepositoryService.save(product));
     }
 
     private void setCategories(Set<Long> requestDto, Product product) {
-        Set<Category> categories = categoryRepoService.getAllByIdIn(requestDto);
+        Set<Category> categories = categoryRepositoryService.getAllByIdIn(requestDto);
         product.setCategories(categories);
     }
 
@@ -114,7 +114,7 @@ public class ProductServiceImpl implements ProductService {
         checkUserPermission(authorities, requestDto);
         Specification<Product> specification = productSpecificationBuilder.build(requestDto);
         Page<Product> products =
-                productRepoService.findAll(pageable, specification);
+                productRepositoryService.findAll(pageable, specification);
         if (authoritiesContainsNameEmployee(authorities)) {
             return getProductResponseDtos(products);
         }
@@ -134,6 +134,6 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public void deleteById(Long id) {
-        productRepoService.deleteById(id);
+        productRepositoryService.deleteById(id);
     }
 }

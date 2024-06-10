@@ -17,7 +17,7 @@ import project.inventorymanager.mapper.UserMapper;
 import project.inventorymanager.model.user.RoleType;
 import project.inventorymanager.model.user.User;
 import project.inventorymanager.repository.RoleTypeRepository;
-import project.inventorymanager.repositoryservice.UserRepoService;
+import project.inventorymanager.repositoryservice.UserRepositoryService;
 import project.inventorymanager.service.UserService;
 
 @Service
@@ -27,37 +27,37 @@ public class UserServiceImpl implements UserService {
     private final RoleTypeRepository roleTypeRepository;
     private final PasswordEncoder passwordEncoder;
     private final UserMapper userMapper;
-    private final UserRepoService userRepoService;
+    private final UserRepositoryService userRepositoryService;
 
     @Override
     @Transactional
     public UserResponseDto getInfo(String email) {
-        return userMapper.toResponseDto(userRepoService.getByEmail(email));
+        return userMapper.toResponseDto(userRepositoryService.getByEmail(email));
     }
 
     @Override
     @Transactional
     public UserResponseDto updateInfo(String email, UserUpdateInfoRequestDto requestDto) {
-        User user = userRepoService.getByEmail(email);
+        User user = userRepositoryService.getByEmail(email);
         setUserInfo(user, requestDto);
-        return userMapper.toResponseDto(userRepoService.save(user));
+        return userMapper.toResponseDto(userRepositoryService.save(user));
     }
 
     private void setUserInfo(User user, UserUpdateInfoRequestDto requestDto) {
-        userRepoService.isAlreadyExist(requestDto.getEmail());
+        userRepositoryService.isAlreadyExist(requestDto.getEmail());
         userMapper.setUpdateInfoToUser(user, requestDto);
     }
 
     @Override
     @Transactional
     public void updatePassword(String email, UserUpdatePasswordRequestDto requestDto) {
-        User user = userRepoService.getByEmail(email);
+        User user = userRepositoryService.getByEmail(email);
         if (!passwordEncoder.matches(requestDto.getOldPassword(), user.getPassword())) {
             throw new PasswordNotValidException("Old password dont valid");
         }
         isPasswordsValid(requestDto.getNewPassword(), requestDto.getRepeatNewPassword());
         setPassword(user, requestDto.getNewPassword());
-        userRepoService.save(user);
+        userRepositoryService.save(user);
     }
 
     private void isPasswordsValid(String password, String repeatPassword) {
@@ -74,9 +74,9 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public UserResponseDto updateRoles(Long id, UserUpdateRolesRequestDto requestDto) {
-        User user = userRepoService.getById(id);
+        User user = userRepositoryService.getById(id);
         setRoleType(user, requestDto.getRoleName());
-        return userMapper.toResponseDto(userRepoService.save(user));
+        return userMapper.toResponseDto(userRepositoryService.save(user));
     }
 
     private void setRoleType(User user, RoleType.RoleName highestRole) {
@@ -89,11 +89,11 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public UserResponseDto register(UserRegistrationRequestDto requestDto) {
-        userRepoService.isAlreadyExist(requestDto.getEmail());
+        userRepositoryService.isAlreadyExist(requestDto.getEmail());
         User user = userMapper.toModelWithoutPasswordAndRoles(requestDto);
         isPasswordsValid(requestDto.getPassword(), requestDto.getRepeatPassword());
         setPassword(user, requestDto.getPassword());
         setRoleType(user, CUSTOMER_ROLE_TYPE);
-        return userMapper.toResponseDto(userRepoService.save(user));
+        return userMapper.toResponseDto(userRepositoryService.save(user));
     }
 }

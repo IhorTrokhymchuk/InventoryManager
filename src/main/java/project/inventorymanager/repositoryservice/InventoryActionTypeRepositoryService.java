@@ -2,7 +2,7 @@ package project.inventorymanager.repositoryservice;
 
 import project.inventorymanager.model.inventoryaction.InventoryActionType;
 
-public interface InventoryActionTypeRepoService {
+public interface InventoryActionTypeRepositoryService {
     InventoryActionType save(InventoryActionType inventoryActionType);
 
     InventoryActionType getById(Long id);
