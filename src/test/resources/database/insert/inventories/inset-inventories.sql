@@ -5,4 +5,4 @@ INSERT INTO inventories (id, product_id, warehouse_id, quantity)
 VALUES (2, 2, 2, 3);
 
 INSERT INTO inventories (id, product_id, warehouse_id, quantity)
-VALUES (3, 3, 2, 5);
+VALUES (3, 1, 2, 5);

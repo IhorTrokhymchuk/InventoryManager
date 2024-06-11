@@ -1,5 +1,6 @@
 package project.inventorymanager.repository;
 
+import java.util.Optional;
 import java.util.Set;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -17,5 +18,5 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
 
     @Query(value = "SELECT * FROM categories WHERE name = :name AND is_deleted = TRUE",
             nativeQuery = true)
-    Category findDeletedByName(@Param("name") String name);
+    Optional<Category> findDeletedByName(@Param("name") String name);
 }
