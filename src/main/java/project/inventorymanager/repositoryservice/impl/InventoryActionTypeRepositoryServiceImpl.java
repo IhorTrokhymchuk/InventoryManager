@@ -14,11 +14,6 @@ public class InventoryActionTypeRepositoryServiceImpl
     private final InventoryActionTypeRepository inventoryActionTypeRepository;
 
     @Override
-    public InventoryActionType save(InventoryActionType inventoryActionType) {
-        return inventoryActionTypeRepository.save(inventoryActionType);
-    }
-
-    @Override
     public InventoryActionType getById(Long id) {
         return inventoryActionTypeRepository.findById(id).orElseThrow(
                 () -> new EntityNotFoundException(
