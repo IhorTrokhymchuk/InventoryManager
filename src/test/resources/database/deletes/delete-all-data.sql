@@ -1,3 +1,4 @@
+DELETE FROM statistic_files;
 DELETE FROM inventory_actions;
 DELETE FROM inventories;
 DELETE FROM warehouses;
