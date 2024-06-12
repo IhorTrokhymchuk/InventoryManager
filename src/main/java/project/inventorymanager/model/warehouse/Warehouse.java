@@ -23,10 +23,10 @@ public class Warehouse {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "location", nullable = false, unique = true)
+    @Column(nullable = false, unique = true)
     private String location;
     @Positive
-    @Column(name = "capacity", nullable = false)
+    @Column(nullable = false)
     private Long capacity;
     @Min(0)
     @Column(name = "free_capacity", nullable = false)

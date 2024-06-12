@@ -1,6 +1,7 @@
 package project.inventorymanager.repositoryservice.impl;
 
 import jakarta.transaction.Transactional;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -26,7 +27,12 @@ public class ProductRepositoryServiceImpl implements ProductRepositoryService {
 
     @Override
     public Product getDeletedByUniqCode(String uniqCode) {
-        return productRepository.findDeletedByUniqCode(uniqCode);
+        Optional<Product> optionalProduct = productRepository.findDeletedByUniqCode(uniqCode);
+        if (optionalProduct.isPresent()) {
+            return optionalProduct.get();
+        }
+        throw new EntityNotFoundException("Cant find entity where uniq code: "
+                + uniqCode + " and is deleted: true");
     }
 
     @Override

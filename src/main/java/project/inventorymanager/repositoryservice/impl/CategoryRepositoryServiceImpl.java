@@ -1,6 +1,7 @@
 package project.inventorymanager.repositoryservice.impl;
 
 import jakarta.transaction.Transactional;
+import java.util.Optional;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -45,7 +46,11 @@ public class CategoryRepositoryServiceImpl implements CategoryRepositoryService 
 
     @Override
     public Category getDeletedByName(String name) {
-        return categoryRepository.findDeletedByName(name);
+        Optional<Category> optionalCategory = categoryRepository.findDeletedByName(name);
+        if (optionalCategory.isPresent()) {
+            return optionalCategory.get();
+        }
+        throw new EntityNotFoundException("Cant find deleted category with name: " + name);
     }
 
     @Override

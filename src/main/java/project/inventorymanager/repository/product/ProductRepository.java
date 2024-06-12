@@ -28,5 +28,5 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     @Query(value = "SELECT * FROM products WHERE uniq_code = :uniqCode AND is_deleted = TRUE",
             nativeQuery = true)
-    Product findDeletedByUniqCode(@Param("uniqCode") String uniqCode);
+    Optional<Product> findDeletedByUniqCode(@Param("uniqCode") String uniqCode);
 }
