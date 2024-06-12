@@ -33,8 +33,8 @@ public class InventoryActionRepositoryServiceImplTest {
     private InventoryActionRepositoryServiceImpl inventoryActionRepositoryService;
 
     @Test
-    @DisplayName("Test save inventory action successfully")
-    public void testSaveInventoryAction() {
+    @DisplayName("Save inventory action successfully")
+    public void save_saveInventoryAction_savedInventoryAction() {
         InventoryAction inventoryAction = new InventoryAction();
         when(inventoryActionRepository.save(inventoryAction)).thenReturn(inventoryAction);
 
@@ -45,8 +45,8 @@ public class InventoryActionRepositoryServiceImplTest {
     }
 
     @Test
-    @DisplayName("Test get inventory action by id successfully")
-    public void testGetById() {
+    @DisplayName("Get inventory action by id successfully")
+    public void getById_getByIdWithExistData_inventoryAction() {
         Long id = 1L;
         InventoryAction inventoryAction = new InventoryAction();
         when(inventoryActionRepository.findById(id)).thenReturn(Optional.of(inventoryAction));
@@ -58,8 +58,8 @@ public class InventoryActionRepositoryServiceImplTest {
     }
 
     @Test
-    @DisplayName("Test get inventory action by id throws EntityNotFoundException")
-    public void testGetByIdNotFound() {
+    @DisplayName("Get inventory action by id throws EntityNotFoundException")
+    public void getById_getByIdWithNonExistData_exception() {
         Long id = 1L;
         when(inventoryActionRepository.findById(id)).thenReturn(Optional.empty());
 
@@ -71,8 +71,8 @@ public class InventoryActionRepositoryServiceImplTest {
     }
 
     @Test
-    @DisplayName("Test findAll inventory actions")
-    public void testFindAll() {
+    @DisplayName("FindAll inventory actions")
+    public void findAll_findAllInventoryActionWithExistData_inventoryActionList() {
         Pageable pageable = PageRequest.of(0, 10);
         Page<InventoryAction> page = new PageImpl<>(List.of(new InventoryAction()));
         when(inventoryActionRepository.findAll(pageable)).thenReturn(page);
@@ -85,8 +85,8 @@ public class InventoryActionRepositoryServiceImplTest {
     }
 
     @Test
-    @DisplayName("Test getAllByDates returns inventory actions successfully")
-    public void testGetAllByDates() {
+    @DisplayName("GetAllByDates returns inventory actions successfully")
+    public void getAllByDates_getAllByDatesWithExistData_inventoryActionList() {
         LocalDate fromDate = LocalDate.now().minusDays(10);
         LocalDate toDate = LocalDate.now();
         List<InventoryAction> actions = List.of(new InventoryAction());
@@ -101,8 +101,8 @@ public class InventoryActionRepositoryServiceImplTest {
     }
 
     @Test
-    @DisplayName("Test getAllByDates throws EntityNotFoundException")
-    public void testGetAllByDatesNotFound() {
+    @DisplayName("GetAllByDates throws EntityNotFoundException")
+    public void getAllByDates_getAllByDatesWithNonExistData_exception() {
         LocalDate fromDate = LocalDate.now().minusDays(10);
         LocalDate toDate = LocalDate.now();
         when(inventoryActionRepository.findAllByDates(fromDate, toDate)).thenReturn(List.of());

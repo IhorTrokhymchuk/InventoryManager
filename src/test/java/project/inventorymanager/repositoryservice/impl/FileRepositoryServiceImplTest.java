@@ -32,8 +32,8 @@ public class FileRepositoryServiceImplTest {
     private FileRepositoryServiceImpl fileRepositoryService;
 
     @Test
-    @DisplayName("Test findAll files successfully")
-    public void testFindAll() {
+    @DisplayName("FindAll files successfully")
+    public void findAll_findAllWithExistData() {
         Pageable pageable = PageRequest.of(0, 10);
         Page<StatisticFile> page = new PageImpl<>(List.of(new StatisticFile()));
         when(statisticFileRepository.findAll(pageable)).thenReturn(page);
@@ -46,8 +46,8 @@ public class FileRepositoryServiceImplTest {
     }
 
     @Test
-    @DisplayName("Test get file by id successfully")
-    public void testGetById() {
+    @DisplayName("Get file by id successfully")
+    public void getById_getByIdWithExistData_statisticFile() {
         Long id = 1L;
         StatisticFile statisticFile = new StatisticFile();
         when(statisticFileRepository.findById(id)).thenReturn(Optional.of(statisticFile));
@@ -59,8 +59,8 @@ public class FileRepositoryServiceImplTest {
     }
 
     @Test
-    @DisplayName("Test get file by id throws EntityNotFoundException")
-    public void testGetByIdNotFound() {
+    @DisplayName("Get file by id throws EntityNotFoundException")
+    public void getById_getByIdWithNonExistData_exception() {
         Long id = 1L;
         when(statisticFileRepository.findById(id)).thenReturn(Optional.empty());
 
@@ -72,8 +72,8 @@ public class FileRepositoryServiceImplTest {
     }
 
     @Test
-    @DisplayName("Test delete file by id successfully")
-    public void testDeleteById() {
+    @DisplayName("Delete file by id successfully")
+    public void deleteById_deleteByIdWithExistData_delete() {
         Long id = 1L;
         doNothing().when(statisticFileRepository).deleteById(id);
 
@@ -83,8 +83,8 @@ public class FileRepositoryServiceImplTest {
     }
 
     @Test
-    @DisplayName("Test save file successfully")
-    public void testSaveFile() {
+    @DisplayName("Save file successfully")
+    public void save_saveStatisticFile_savedStatisticFile() {
         StatisticFile statisticFile = new StatisticFile();
         when(statisticFileRepository.save(statisticFile)).thenReturn(statisticFile);
 

@@ -44,7 +44,7 @@ public class UserServiceImpl implements UserService {
     }
 
     private void setUserInfo(User user, UserUpdateInfoRequestDto requestDto) {
-        userRepositoryService.isAlreadyExist(requestDto.getEmail());
+        userRepositoryService.isAlreadyExistThrowException(requestDto.getEmail());
         userMapper.setUpdateInfoToUser(user, requestDto);
     }
 
@@ -80,7 +80,7 @@ public class UserServiceImpl implements UserService {
     }
 
     private void setRoleType(User user, RoleType.RoleName highestRole) {
-        List<RoleType.RoleName> roleNamesSubList = RoleType.RoleName.getRolesUpTo(highestRole);;
+        List<RoleType.RoleName> roleNamesSubList = RoleType.RoleName.getRolesUpTo(highestRole);
         List<RoleType> roleTypes = roleTypeRepository.findRoleTypesByNameIn(roleNamesSubList);
         Set<RoleType> newRoleTypes = new HashSet<>(roleTypes);
         user.setRoles(newRoleTypes);
@@ -89,7 +89,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public UserResponseDto register(UserRegistrationRequestDto requestDto) {
-        userRepositoryService.isAlreadyExist(requestDto.getEmail());
+        userRepositoryService.isAlreadyExistThrowException(requestDto.getEmail());
         User user = userMapper.toModelWithoutPasswordAndRoles(requestDto);
         isPasswordsValid(requestDto.getPassword(), requestDto.getRepeatPassword());
         setPassword(user, requestDto.getPassword());

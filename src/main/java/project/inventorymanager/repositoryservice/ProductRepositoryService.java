@@ -14,7 +14,7 @@ public interface ProductRepositoryService {
 
     Page<Product> findAll(Pageable pageable, Specification<Product> specification);
 
-    void isExistWithUniqCode(String uniqCode);
+    void isExistWithUniqCodeThrowException(String uniqCode);
 
     boolean ifExistDeletedWithUniqCode(String uniqCode);
 

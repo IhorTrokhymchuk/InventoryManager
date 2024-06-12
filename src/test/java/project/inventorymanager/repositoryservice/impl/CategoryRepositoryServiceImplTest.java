@@ -37,7 +37,7 @@ public class CategoryRepositoryServiceImplTest {
 
     @Test
     @DisplayName("Test save category successfully")
-    public void testSaveCategory() {
+    public void save_saveCategory_savedCategory() {
         Category category = new Category();
         when(categoryRepository.save(any(Category.class))).thenReturn(category);
 
@@ -49,7 +49,7 @@ public class CategoryRepositoryServiceImplTest {
 
     @Test
     @DisplayName("Test get category by id successfully")
-    public void testGetById() {
+    public void getById_getByIdWithExistData_category() {
         Long id = 1L;
         Category category = new Category();
         when(categoryRepository.findById(id)).thenReturn(Optional.of(category));
@@ -62,7 +62,7 @@ public class CategoryRepositoryServiceImplTest {
 
     @Test
     @DisplayName("Test get category by id throws EntityNotFoundException")
-    public void testGetByIdNotFound() {
+    public void getById_getByIdWithNonExistData_exception() {
         Long id = 1L;
         when(categoryRepository.findById(id)).thenReturn(Optional.empty());
 
@@ -75,7 +75,7 @@ public class CategoryRepositoryServiceImplTest {
 
     @Test
     @DisplayName("Test isExistWithName throws EntityAlreadyExistsException")
-    public void testIsExistWithNameThrowsException() {
+    public void isExistWithName_withExistData_exception() {
         String name = "Electronics";
         when(categoryRepository.existsByName(name)).thenReturn(true);
 
@@ -89,7 +89,7 @@ public class CategoryRepositoryServiceImplTest {
 
     @Test
     @DisplayName("Test ifExistDeletedWithName returns true")
-    public void testIfExistDeletedWithName() {
+    public void ifExistDeletedWithName_WithExistData_true() {
         String name = "Electronics";
         when(categoryRepository.existsByNameIncludingDeleted(name)).thenReturn(1L);
 
@@ -101,7 +101,7 @@ public class CategoryRepositoryServiceImplTest {
 
     @Test
     @DisplayName("Test getDeletedByName successfully")
-    public void testGetDeletedByName() {
+    public void getDeletedByName_WithExistData_deletedCategory() {
         String name = "Electronics";
         Category category = new Category();
         when(categoryRepository.findDeletedByName(name)).thenReturn(Optional.of(category));
@@ -114,7 +114,7 @@ public class CategoryRepositoryServiceImplTest {
 
     @Test
     @DisplayName("Test getDeletedByName throws EntityNotFoundException")
-    public void testGetDeletedByNameNotFound() {
+    public void getDeletedByName_WithNonExistData_exception() {
         String name = "Electronics";
         when(categoryRepository.findDeletedByName(name)).thenReturn(Optional.empty());
 
@@ -128,7 +128,7 @@ public class CategoryRepositoryServiceImplTest {
 
     @Test
     @DisplayName("Test findAll categories")
-    public void testFindAll() {
+    public void findAll_findAllWithExistData_categoryList() {
         Pageable pageable = PageRequest.of(0, 10);
         Page<Category> page = new PageImpl<>(List.of(new Category()));
         when(categoryRepository.findAll(pageable)).thenReturn(page);
@@ -142,7 +142,7 @@ public class CategoryRepositoryServiceImplTest {
 
     @Test
     @DisplayName("Test deleteById successfully")
-    public void testDeleteById() {
+    public void deleteById_WithExistData_delete() {
         Long id = 1L;
         when(categoryRepository.existsById(id)).thenReturn(true);
 
@@ -153,7 +153,7 @@ public class CategoryRepositoryServiceImplTest {
 
     @Test
     @DisplayName("Test deleteById throws EntityNotFoundException")
-    public void testDeleteByIdNotFound() {
+    public void deleteById_WithNonExistData_exception() {
         Long id = 1L;
 
         when(categoryRepository.existsById(id)).thenReturn(false);
@@ -167,7 +167,7 @@ public class CategoryRepositoryServiceImplTest {
 
     @Test
     @DisplayName("Test getAllByIdIn successfully")
-    public void testGetAllByIdIn() {
+    public void getAllByIdIn_withExistData_categoryList() {
         Set<Long> ids = Set.of(1L, 2L);
         Set<Category> categories = Set.of(new Category());
         when(categoryRepository.findAllByIdIn(ids)).thenReturn(categories);
@@ -181,7 +181,7 @@ public class CategoryRepositoryServiceImplTest {
 
     @Test
     @DisplayName("Test getAllByIdIn throws EntityNotFoundException")
-    public void testGetAllByIdInNotFound() {
+    public void getAllByIdIn_withNonExistData_exception() {
         Set<Long> ids = Set.of(1L, 2L);
         when(categoryRepository.findAllByIdIn(ids)).thenReturn(Set.of());
 

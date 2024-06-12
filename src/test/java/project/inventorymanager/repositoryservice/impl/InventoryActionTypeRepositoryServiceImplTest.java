@@ -26,8 +26,8 @@ public class InventoryActionTypeRepositoryServiceImplTest {
     private InventoryActionTypeRepositoryServiceImpl inventoryActionTypeRepositoryService;
 
     @Test
-    @DisplayName("Test get inventory action type by id successfully")
-    public void testGetById() {
+    @DisplayName("Get inventory action type by id successfully")
+    public void getById_getByIdWithExistData_inventoryActionType() {
         Long id = 1L;
         InventoryActionType inventoryActionType = new InventoryActionType();
         when(inventoryActionTypeRepository.findById(id))
@@ -40,8 +40,8 @@ public class InventoryActionTypeRepositoryServiceImplTest {
     }
 
     @Test
-    @DisplayName("Test get inventory action type by id throws EntityNotFoundException")
-    public void testGetByIdNotFound() {
+    @DisplayName("Get inventory action type by id throws EntityNotFoundException")
+    public void getById_getByIdWithNonExistData_exception() {
         Long id = 1L;
         when(inventoryActionTypeRepository.findById(id)).thenReturn(Optional.empty());
 
@@ -53,8 +53,8 @@ public class InventoryActionTypeRepositoryServiceImplTest {
     }
 
     @Test
-    @DisplayName("Test get inventory action type by type name successfully")
-    public void testGetByTypeName() {
+    @DisplayName("Get inventory action type by type name successfully")
+    public void getByTypeName_getByTypeNameWithExistData_inventoryActionType() {
         InventoryActionType.InventoryActionTypeName name
                 = InventoryActionType.InventoryActionTypeName.REPLENISHMENT;
         InventoryActionType inventoryActionType = new InventoryActionType();

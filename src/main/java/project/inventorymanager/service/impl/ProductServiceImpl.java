@@ -35,7 +35,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     @Transactional
     public ProductResponseDto save(ProductRequestDto requestDto) {
-        productRepositoryService.isExistWithUniqCode(requestDto.getUniqCode());
+        productRepositoryService.isExistWithUniqCodeThrowException(requestDto.getUniqCode());
         Product product = getProductWithoutCategories(requestDto);
         setCategories(requestDto.getCategoryIds(), product);
         return productMapper.toResponseDto(

@@ -28,8 +28,8 @@ public class UserRepositoryServiceImplTest {
     private UserRepositoryServiceImpl userRepositoryService;
 
     @Test
-    @DisplayName("Test get user by email successfully")
-    public void testGetByEmail() {
+    @DisplayName("Get user by email successfully")
+    public void getByEmail_getByEmailWithExistData_user() {
         String email = "test@example.com";
         User user = new User();
         when(userRepository.findUserByEmail(email)).thenReturn(Optional.of(user));
@@ -41,8 +41,8 @@ public class UserRepositoryServiceImplTest {
     }
 
     @Test
-    @DisplayName("Test get user by email throws EntityNotFoundException")
-    public void testGetByEmailNotFound() {
+    @DisplayName("Get user by email throws EntityNotFoundException")
+    public void getByEmail_getByEmailWithNonExistData_exception() {
         String email = "test@example.com";
         when(userRepository.findUserByEmail(email)).thenReturn(Optional.empty());
 
@@ -54,8 +54,8 @@ public class UserRepositoryServiceImplTest {
     }
 
     @Test
-    @DisplayName("Test get user by id successfully")
-    public void testGetById() {
+    @DisplayName("Get user by id successfully")
+    public void getById_getByIdWithExistData_user() {
         Long id = 1L;
         User user = new User();
         when(userRepository.findById(id)).thenReturn(Optional.of(user));
@@ -67,8 +67,8 @@ public class UserRepositoryServiceImplTest {
     }
 
     @Test
-    @DisplayName("Test get user by id throws EntityNotFoundException")
-    public void testGetByIdNotFound() {
+    @DisplayName("Get user by id throws EntityNotFoundException")
+    public void getById_getByIdWithNonExistData_exception() {
         Long id = 1L;
         when(userRepository.findById(id)).thenReturn(Optional.empty());
 
@@ -80,8 +80,8 @@ public class UserRepositoryServiceImplTest {
     }
 
     @Test
-    @DisplayName("Test save user successfully")
-    public void testSaveUser() {
+    @DisplayName("Save user successfully")
+    public void save_saveUser_savedUser() {
         User user = new User();
         when(userRepository.save(user)).thenReturn(user);
 
@@ -92,27 +92,27 @@ public class UserRepositoryServiceImplTest {
     }
 
     @Test
-    @DisplayName("Test check if user already exists by email throws EntityAlreadyExistsException")
-    public void testIsAlreadyExist() {
+    @DisplayName("Check if user already exists by email throws EntityAlreadyExistsException")
+    public void isAlreadyExistThrowException_isAlreadyExistWithExistData_exception() {
         String email = "test@example.com";
         User user = new User();
         when(userRepository.findUserByEmail(email)).thenReturn(Optional.of(user));
 
         EntityAlreadyExistsException exception = assertThrows(
                 EntityAlreadyExistsException.class, () ->
-                        userRepositoryService.isAlreadyExist(email));
+                        userRepositoryService.isAlreadyExistThrowException(email));
 
         assertEquals("User with email: " + email + " is exist", exception.getMessage());
         verify(userRepository, times(1)).findUserByEmail(email);
     }
 
     @Test
-    @DisplayName("Test check if user already exists by email and does not throw exception")
-    public void testIsAlreadyExistNotFound() {
+    @DisplayName("Check if user already exists by email and does not throw exception")
+    public void isAlreadyExistThrowException_withNonExistData_nothing() {
         String email = "test@example.com";
         when(userRepository.findUserByEmail(email)).thenReturn(Optional.empty());
 
-        assertDoesNotThrow(() -> userRepositoryService.isAlreadyExist(email));
+        assertDoesNotThrow(() -> userRepositoryService.isAlreadyExistThrowException(email));
         verify(userRepository, times(1)).findUserByEmail(email);
     }
 }
