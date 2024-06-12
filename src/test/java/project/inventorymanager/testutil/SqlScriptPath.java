@@ -11,7 +11,8 @@ public enum SqlScriptPath {
     INSERT_WAREHOUSES("database/insert/warehouses/insert-two-warehouses.sql"),
     INSERT_PRODUCTS("database/insert/products/insert-three-products.sql"),
     INSERT_INVENTORIES("database/insert/inventories/inset-inventories.sql"),
-    INSERT_USER("database/insert/users/insert-three-users.sql");
+    INSERT_USER("database/insert/users/insert-three-users.sql"),
+    INSERT_INVENTORY_ACTIONS("database/insert/inventoryactions/insert-five-inventory-actions.sql");
 
     private final String path;
 }

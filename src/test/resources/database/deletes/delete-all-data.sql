@@ -1,3 +1,4 @@
+DELETE FROM inventory_actions;
 DELETE FROM inventories;
 DELETE FROM warehouses;
 DELETE FROM products_categories;
