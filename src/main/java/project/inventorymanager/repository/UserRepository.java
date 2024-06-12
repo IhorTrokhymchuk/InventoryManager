@@ -6,7 +6,6 @@ import org.springframework.data.jpa.repository.Query;
 import project.inventorymanager.model.user.User;
 
 public interface UserRepository extends JpaRepository<User, Long> {
-    //todo: @EntityGraph(attributePaths = {"roles"})
     @Query("SELECT u FROM User u JOIN FETCH u.roles WHERE u.email = :email")
     Optional<User> findUserByEmailWithRoles(String email);
 
