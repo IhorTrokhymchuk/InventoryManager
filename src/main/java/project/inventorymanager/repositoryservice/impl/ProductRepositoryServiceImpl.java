@@ -52,7 +52,7 @@ public class ProductRepositoryServiceImpl implements ProductRepositoryService {
     }
 
     @Override
-    public void isExistWithUniqCode(String uniqCode) {
+    public void isExistWithUniqCodeThrowException(String uniqCode) {
         if (productRepository.existsByUniqCode(uniqCode)) {
             throw new EntityAlreadyExistsException("Product with uniq code '"
                     + uniqCode + "' already exist");

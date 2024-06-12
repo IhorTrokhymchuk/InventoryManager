@@ -35,8 +35,8 @@ public class ProductRepositoryServiceImplTest {
     private ProductRepositoryServiceImpl productRepositoryService;
 
     @Test
-    @DisplayName("Test get product by id successfully")
-    public void testGetById() {
+    @DisplayName("Get product by id successfully")
+    public void getById_getByIdWithExistData_product() {
         Long id = 1L;
         Product product = new Product();
         when(productRepository.findById(id)).thenReturn(Optional.of(product));
@@ -48,8 +48,8 @@ public class ProductRepositoryServiceImplTest {
     }
 
     @Test
-    @DisplayName("Test get product by id throws EntityNotFoundException")
-    public void testGetByIdNotFound() {
+    @DisplayName("Get product by id throws EntityNotFoundException")
+    public void getById_getByIdWithNonExistData_exception() {
         Long id = 1L;
         when(productRepository.findById(id)).thenReturn(Optional.empty());
 
@@ -61,8 +61,8 @@ public class ProductRepositoryServiceImplTest {
     }
 
     @Test
-    @DisplayName("Test get deleted product by uniq code successfully")
-    public void testGetDeletedByUniqCode() {
+    @DisplayName("Get deleted product by uniq code successfully")
+    public void getDeletedByUniqCode_getDeletedWithExistData_deletedProduct() {
         String uniqCode = "ABC123";
         Product product = new Product();
         when(productRepository.findDeletedByUniqCode(uniqCode)).thenReturn(Optional.of(product));
@@ -74,8 +74,8 @@ public class ProductRepositoryServiceImplTest {
     }
 
     @Test
-    @DisplayName("Test get deleted product by uniq code throws EntityNotFoundException")
-    public void testGetDeletedByUniqCodeNotFound() {
+    @DisplayName("Get deleted product by uniq code throws EntityNotFoundException")
+    public void getDeletedByUniqCode_getDeletedByUniqCodeWithNonExistData_exception() {
         String uniqCode = "ABC123";
         when(productRepository.findDeletedByUniqCode(uniqCode)).thenReturn(Optional.empty());
 
@@ -88,8 +88,8 @@ public class ProductRepositoryServiceImplTest {
     }
 
     @Test
-    @DisplayName("Test if deleted product exists by uniq code")
-    public void testIfExistDeletedWithUniqCode() {
+    @DisplayName("If deleted product exists by uniq code")
+    public void ifExistDeletedWithUniqCode_withExistData_true() {
         String uniqCode = "ABC123";
         when(productRepository.existsByUniqCodeIncludingDeleted(uniqCode)).thenReturn(1L);
 
@@ -100,8 +100,8 @@ public class ProductRepositoryServiceImplTest {
     }
 
     @Test
-    @DisplayName("Test find all products")
-    public void testFindAll() {
+    @DisplayName("Find all products")
+    public void findAll_findAllWithExistData_productList() {
         Pageable pageable = PageRequest.of(0, 10);
         Page<Product> page = new PageImpl<>(List.of(new Product()));
         when(productRepository.findAll(pageable)).thenReturn(page);
@@ -114,8 +114,8 @@ public class ProductRepositoryServiceImplTest {
     }
 
     @Test
-    @DisplayName("Test find all products with specification")
-    public void testFindAllWithSpecification() {
+    @DisplayName("Find all products with specification")
+    public void findAll_findAllWithSpecificationWithExistData_productList() {
         Pageable pageable = PageRequest.of(0, 10);
         Specification<Product> specification = mock(Specification.class);
         Page<Product> page = new PageImpl<>(List.of(new Product()));
@@ -129,14 +129,14 @@ public class ProductRepositoryServiceImplTest {
     }
 
     @Test
-    @DisplayName("Test check if product exists by uniq code throws EntityAlreadyExistsException")
-    public void testIsExistWithUniqCode() {
+    @DisplayName("Check if product exists by uniq code throws EntityAlreadyExistsException")
+    public void isExistWithUniqCodeThrowException_withExistData_exception() {
         String uniqCode = "ABC123";
         when(productRepository.existsByUniqCode(uniqCode)).thenReturn(true);
 
         EntityAlreadyExistsException exception = assertThrows(
                 EntityAlreadyExistsException.class, () ->
-                        productRepositoryService.isExistWithUniqCode(uniqCode));
+                        productRepositoryService.isExistWithUniqCodeThrowException(uniqCode));
 
         assertEquals("Product with uniq code '" + uniqCode
                 + "' already exist", exception.getMessage());
@@ -144,8 +144,8 @@ public class ProductRepositoryServiceImplTest {
     }
 
     @Test
-    @DisplayName("Test delete product by id successfully")
-    public void testDeleteById() {
+    @DisplayName("Delete product by id successfully")
+    public void deleteById_deleteByIdWithExistData_delete() {
         Long id = 1L;
         when(productRepository.existsById(id)).thenReturn(true);
 
@@ -155,8 +155,8 @@ public class ProductRepositoryServiceImplTest {
     }
 
     @Test
-    @DisplayName("Test delete product by id throws EntityNotFoundException")
-    public void testDeleteByIdNotFound() {
+    @DisplayName("Delete product by id throws EntityNotFoundException")
+    public void deleteById_deleteByIdWithNonExistData_exception() {
         Long id = 1L;
         when(productRepository.existsById(id)).thenReturn(false);
 
@@ -168,8 +168,8 @@ public class ProductRepositoryServiceImplTest {
     }
 
     @Test
-    @DisplayName("Test save product successfully")
-    public void testSaveProduct() {
+    @DisplayName("Save product successfully")
+    public void save_saveProduct_savedProduct() {
         Product product = new Product();
         when(productRepository.save(product)).thenReturn(product);
 

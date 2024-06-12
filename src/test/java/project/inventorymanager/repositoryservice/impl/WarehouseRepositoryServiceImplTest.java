@@ -30,8 +30,8 @@ public class WarehouseRepositoryServiceImplTest {
     private WarehouseRepositoryServiceImpl warehouseRepositoryService;
 
     @Test
-    @DisplayName("Test save warehouse successfully")
-    public void testSaveWarehouse() {
+    @DisplayName("Save warehouse successfully")
+    public void save_saveWarehouse_savedWarehouses() {
         Warehouse warehouse = new Warehouse();
         when(warehouseRepository.save(warehouse)).thenReturn(warehouse);
 
@@ -42,8 +42,8 @@ public class WarehouseRepositoryServiceImplTest {
     }
 
     @Test
-    @DisplayName("Test get warehouse by id successfully")
-    public void testGetById() {
+    @DisplayName("Get warehouse by id successfully")
+    public void getById_getWarehouseByExistId_warehouseOptional() {
         Long id = 1L;
         Warehouse warehouse = new Warehouse();
         when(warehouseRepository.findById(id)).thenReturn(Optional.of(warehouse));
@@ -55,22 +55,21 @@ public class WarehouseRepositoryServiceImplTest {
     }
 
     @Test
-    @DisplayName("Test get warehouse by id throws EntityNotFoundException")
-    public void testGetByIdNotFound() {
+    @DisplayName("Get warehouse by id throws EntityNotFoundException")
+    public void getById_getByIdWithNonExistWarehouse_exception() {
         Long id = 1L;
         when(warehouseRepository.findById(id)).thenReturn(Optional.empty());
 
-        EntityNotFoundException exception = assertThrows(EntityNotFoundException.class, () -> {
-            warehouseRepositoryService.getById(id);
-        });
+        EntityNotFoundException exception = assertThrows(EntityNotFoundException.class, () ->
+                warehouseRepositoryService.getById(id));
 
         assertEquals("Cant find warehouse with id: " + id, exception.getMessage());
         verify(warehouseRepository, times(1)).findById(id);
     }
 
     @Test
-    @DisplayName("Test find all warehouses with pagination")
-    public void testFindAll() {
+    @DisplayName("Find all warehouses with pagination")
+    public void findAll_findAllWithExistData_warehouseList() {
         Pageable pageable = mock(Pageable.class);
         Page<Warehouse> warehouses = mock(Page.class);
         when(warehouseRepository.findAll(pageable)).thenReturn(warehouses);
@@ -82,8 +81,8 @@ public class WarehouseRepositoryServiceImplTest {
     }
 
     @Test
-    @DisplayName("Test delete warehouse by id successfully")
-    public void testDeleteById() {
+    @DisplayName("Delete warehouse by id successfully")
+    public void deleteById_deleteByIdWithExistData_delete() {
         Long id = 1L;
         when(warehouseRepository.existsById(id)).thenReturn(true);
 
@@ -93,14 +92,13 @@ public class WarehouseRepositoryServiceImplTest {
     }
 
     @Test
-    @DisplayName("Test delete warehouse by id throws EntityNotFoundException")
-    public void testDeleteByIdNotFound() {
+    @DisplayName("Delete warehouse by id throws EntityNotFoundException")
+    public void deleteById_deleteByIdWithNotExistData_exception() {
         Long id = 1L;
         when(warehouseRepository.existsById(id)).thenReturn(false);
 
-        EntityNotFoundException exception = assertThrows(EntityNotFoundException.class, () -> {
-            warehouseRepositoryService.deleteById(id);
-        });
+        EntityNotFoundException exception = assertThrows(EntityNotFoundException.class,
+                () -> warehouseRepositoryService.deleteById(id));
 
         assertEquals("Cant find warehouse with id: " + id, exception.getMessage());
         verify(warehouseRepository, times(1)).existsById(id);

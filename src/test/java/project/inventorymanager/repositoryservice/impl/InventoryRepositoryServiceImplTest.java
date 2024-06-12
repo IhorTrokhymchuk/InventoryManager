@@ -32,8 +32,8 @@ public class InventoryRepositoryServiceImplTest {
     private InventoryRepositoryServiceImpl inventoryRepositoryService;
 
     @Test
-    @DisplayName("Test save inventory successfully")
-    public void testSaveInventory() {
+    @DisplayName("Save inventory successfully")
+    public void save_saveInventory_savedInventory() {
         Inventory inventory = new Inventory();
         when(inventoryRepository.save(inventory)).thenReturn(inventory);
 
@@ -44,8 +44,8 @@ public class InventoryRepositoryServiceImplTest {
     }
 
     @Test
-    @DisplayName("Test get inventory by productId and warehouseId successfully")
-    public void testGetByProductIdAndWarehouseId() {
+    @DisplayName("Get inventory by productId and warehouseId successfully")
+    public void getByProductIdAndWarehouseId_withExistData_inventory() {
         Long productId = 1L;
         Long warehouseId = 1L;
         Inventory inventory = new Inventory();
@@ -60,16 +60,16 @@ public class InventoryRepositoryServiceImplTest {
     }
 
     @Test
-    @DisplayName("Test get inventory by productId and warehouseId throws EntityNotFoundException")
-    public void testGetByProductIdAndWarehouseIdNotFound() {
+    @DisplayName("Get inventory by productId and warehouseId throws EntityNotFoundException")
+    public void getByProductIdAndWarehouseId_withNonExistData_exception() {
         Long productId = 1L;
         Long warehouseId = 1L;
         when(inventoryRepository.findByProductIdAndWarehouseId(productId, warehouseId))
                 .thenReturn(Optional.empty());
 
-        EntityNotFoundException exception = assertThrows(EntityNotFoundException.class, () -> {
-            inventoryRepositoryService.getByProductIdAndWarehouseId(productId, warehouseId);
-        });
+        EntityNotFoundException exception = assertThrows(EntityNotFoundException.class,
+                () -> inventoryRepositoryService
+                        .getByProductIdAndWarehouseId(productId, warehouseId));
 
         assertEquals("Cant find product with id: " + productId + " on warehouse with id: "
                 + warehouseId, exception.getMessage());
@@ -77,8 +77,8 @@ public class InventoryRepositoryServiceImplTest {
     }
 
     @Test
-    @DisplayName("Test findAll inventories")
-    public void testFindAll() {
+    @DisplayName("FindAll inventories")
+    public void findAll_withExistData_inventoryList() {
         Pageable pageable = PageRequest.of(0, 10);
         Page<Inventory> page = new PageImpl<>(List.of(new Inventory()));
         when(inventoryRepository.findAll(pageable)).thenReturn(page);
@@ -91,8 +91,8 @@ public class InventoryRepositoryServiceImplTest {
     }
 
     @Test
-    @DisplayName("Test get inventory by id successfully")
-    public void testGetById() {
+    @DisplayName("Get inventory by id successfully")
+    public void getById_getByIdWithExistData_inventory() {
         Long id = 1L;
         Inventory inventory = new Inventory();
         when(inventoryRepository.findById(id)).thenReturn(Optional.of(inventory));
@@ -104,22 +104,21 @@ public class InventoryRepositoryServiceImplTest {
     }
 
     @Test
-    @DisplayName("Test get inventory by id throws EntityNotFoundException")
-    public void testGetByIdNotFound() {
+    @DisplayName("Get inventory by id throws EntityNotFoundException")
+    public void getById_withNonExistData_exception() {
         Long id = 1L;
         when(inventoryRepository.findById(id)).thenReturn(Optional.empty());
 
-        EntityNotFoundException exception = assertThrows(EntityNotFoundException.class, () -> {
-            inventoryRepositoryService.getById(id);
-        });
+        EntityNotFoundException exception = assertThrows(EntityNotFoundException.class,
+                () -> inventoryRepositoryService.getById(id));
 
         assertEquals("Cant find inventory with id: " + id, exception.getMessage());
         verify(inventoryRepository, times(1)).findById(id);
     }
 
     @Test
-    @DisplayName("Test find inventory by productId and warehouseId successfully")
-    public void testFindByProductIdAndWarehouseId() {
+    @DisplayName("Find inventory by productId and warehouseId successfully")
+    public void findByProductIdAndWarehouseId_findInventory_optionalInventory() {
         Long productId = 1L;
         Long warehouseId = 1L;
         Inventory inventory = new Inventory();

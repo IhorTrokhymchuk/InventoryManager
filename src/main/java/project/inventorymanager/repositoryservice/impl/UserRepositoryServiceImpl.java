@@ -32,7 +32,7 @@ public class UserRepositoryServiceImpl implements UserRepositoryService {
     }
 
     @Override
-    public void isAlreadyExist(String email) {
+    public void isAlreadyExistThrowException(String email) {
         Optional<User> userByEmail = userRepository.findUserByEmail(email);
         if (userByEmail.isPresent()) {
             throw new EntityAlreadyExistsException("User with email: " + email + " is exist");

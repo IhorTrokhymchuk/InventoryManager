@@ -9,5 +9,5 @@ public interface UserRepositoryService {
 
     User save(User user);
 
-    void isAlreadyExist(String email);
+    void isAlreadyExistThrowException(String email);
 }
