@@ -23,7 +23,7 @@ import project.inventorymanager.service.UserService;
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
-    private static final RoleType.RoleName CUSTOMER_ROLE_TYPE = RoleType.RoleName.USER;
+    private static final RoleType.RoleName USER_ROLE_TYPE = RoleType.RoleName.USER;
     private final RoleTypeRepository roleTypeRepository;
     private final PasswordEncoder passwordEncoder;
     private final UserMapper userMapper;
@@ -90,10 +90,10 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public UserResponseDto register(UserRegistrationRequestDto requestDto) {
         userRepositoryService.isAlreadyExistThrowException(requestDto.getEmail());
-        User user = userMapper.toModelWithoutPasswordAndRoles(requestDto);
         isPasswordsValid(requestDto.getPassword(), requestDto.getRepeatPassword());
+        User user = userMapper.toModelWithoutPasswordAndRoles(requestDto);
         setPassword(user, requestDto.getPassword());
-        setRoleType(user, CUSTOMER_ROLE_TYPE);
+        setRoleType(user, USER_ROLE_TYPE);
         return userMapper.toResponseDto(userRepositoryService.save(user));
     }
 }
