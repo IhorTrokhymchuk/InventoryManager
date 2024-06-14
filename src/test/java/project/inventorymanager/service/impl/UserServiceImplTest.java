@@ -1,4 +1,4 @@
-package project.inventorymanager.service;
+package project.inventorymanager.service.impl;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -35,10 +35,9 @@ import project.inventorymanager.model.user.RoleType;
 import project.inventorymanager.model.user.User;
 import project.inventorymanager.repository.RoleTypeRepository;
 import project.inventorymanager.repositoryservice.UserRepositoryService;
-import project.inventorymanager.service.impl.UserServiceImpl;
 
 @ExtendWith(MockitoExtension.class)
-class UserServiceTest {
+class UserServiceImplTest {
     private static final RoleType.RoleName USER = RoleType.RoleName.USER;
     private static final RoleType.RoleName EMPLOYEE = RoleType.RoleName.EMPLOYEE;
     private static final RoleType.RoleName ADMIN = RoleType.RoleName.ADMIN;
