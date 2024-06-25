@@ -54,6 +54,13 @@ public class ProductServiceImpl implements ProductService {
         return product;
     }
 
+    private void setCategories(Set<Long> categoryIds, Product product) {
+        if (categoryIds != null) {
+            Set<Category> categories = categoryRepositoryService.getAllByIdIn(categoryIds);
+            product.setCategories(categories);
+        }
+    }
+
     @Override
     public ProductResponseDto getById(Long id, Collection<? extends GrantedAuthority> authorities) {
         Product product = productRepositoryService.getById(id);
@@ -99,11 +106,6 @@ public class ProductServiceImpl implements ProductService {
         productMapper.setParametersWithoutCategories(product, requestDto);
         setCategories(requestDto.getCategoryIds(), product);
         return productMapper.toResponseDto(productRepositoryService.save(product));
-    }
-
-    private void setCategories(Set<Long> requestDto, Product product) {
-        Set<Category> categories = categoryRepositoryService.getAllByIdIn(requestDto);
-        product.setCategories(categories);
     }
 
     @Override
